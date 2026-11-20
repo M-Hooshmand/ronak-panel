@@ -1,0 +1,81 @@
+/* ==========================================================================
+   Ronak design tokens
+   ========================================================================== */
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("/fonts/Vazirmatn-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("/fonts/Vazirmatn-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("/fonts/Vazirmatn-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("/fonts/Vazirmatn-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("/fonts/Vazirmatn-ExtraBold.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg: #070b14;
+  --bg-deep: #05080f;
+  --surface: #0c1420;
+  --surface-2: #111b2b;
+  --surface-3: #162234;
+  --border: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.13);
+
+  --mint: #2fe0be;
+  --mint-dim: rgba(47, 224, 190, 0.12);
+  --mint-soft: rgba(47, 224, 190, 0.24);
+  --indigo: #7c8cff;
+  --indigo-dim: rgba(124, 140, 255, 0.13);
+  --warn: #f7b955;
+  --warn-dim: rgba(247, 185, 85, 0.13);
+  --danger: #ff6b81;
+  --danger-dim: rgba(255, 107, 129, 0.13);
+  --success: #7be495;
+  --success-dim: rgba(123, 228, 149, 0.12);
+
+  --text: #eaf2ff;
+  --text-2: #c3d1e4;
+  --muted: #8a9bb4;
+  --muted-2: #61718a;
+
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+
+  --sidebar-w: 248px;
+  --topbar-h: 64px;
+
+  --font: "Vazirmatn", "Segoe UI", Tahoma, system-ui, sans-serif;
+  --mono: "SF Mono", "JetBrains Mono", ui-monospace, "Cascadia Code", monospace;
+
+  --glow-mint: 0 0 0 1px rgba(47, 224, 190, 0.22), 0 8px 28px -12px rgba(47, 224, 190, 0.45);
+  --shadow-pop: 0 24px 60px -20px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.06);
+
+  --ease: cubic-bezier(0.22, 0.8, 0.28, 1);
+}
