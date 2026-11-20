@@ -105,6 +105,9 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(dist, "index.html"));
 });
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`ronak-panel listening on :${PORT}`);
-});
+const listenPorts = [...new Set([PORT, 80])];
+for (const p of listenPorts) {
+  app
+    .listen(p, "0.0.0.0", () => console.log(`ronak-panel listening on :${p}`))
+    .on("error", (err) => console.error(`listen :${p} failed — ${err.message}`));
+}
