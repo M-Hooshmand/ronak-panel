@@ -1,0 +1,155 @@
+import { useSearchParams } from "react-router-dom";
+import { ShoppingBag, Users, ReceiptText, Wallet, Percent, Download, Plus } from "lucide-react";
+import { Badge, Tabs, Progress, useToast } from "../components/ui";
+import { faNum, shortNum, pct } from "../lib/format";
+import { customers, salesInvoices, aging, commission } from "../lib/business";
+
+export default function Sales() {
+  const [params, setParams] = useSearchParams();
+  const tab = (params.get("tab") ?? "cust") as "cust" | "inv" | "ar" | "com";
+  const setTab = (t: "cust" | "inv" | "ar" | "com") => setParams({ tab: t }, { replace: true });
+  const toast = useToast();
+  const totalAR = aging.reduce((s, a) => s + a.amount, 0);
+
+  return (
+    <div className="page">
+      <div className="page-head">
+        <div>
+          <div className="ph-title"><h1>فروش و مشتریان</h1><Badge tone="mint" dot={false}>هدف ماه: ۸۵٪</Badge></div>
+          <p>مشتریان، فاکتورها، وصول مطالبات و پورسانت تیم فروش — آبان ۱۴۰۵</p>
+        </div>
+        <div className="page-actions">
+          <button className="btn btn-sm"><Download size={13} /> خروجی</button>
+          <button className="btn btn-sm btn-primary" onClick={() => toast("فاکتور جدید", "فرم صدور فاکتور باز شد.", "info")}><Plus size={13} /> فاکتور جدید</button>
+        </div>
+      </div>
+
+      <div className="kpi-grid">
+        {[
+          { label: "فروش آبان", value: 9_840_000_000, icon: ShoppingBag, c: "#2FE0BE", hint: "+۱۰٫۳٪ نسبت به مهر" },
+          { label: "وصول‌شده", value: 7_240_000_000, icon: Wallet, c: "#7BE495", hint: "۷۴٪ از فروش" },
+          { label: "مطالبات باز", value: totalAR, icon: ReceiptText, c: "#F7B955", hint: `${faNum(customers.length)} مشتری` },
+          { label: "پورسانت ماه", value: Math.round(commission.reduce((s, c) => s + (c.sold * c.rate) / 100, 0)), icon: Percent, c: "#7C8CFF", hint: "۳ کارشناس فروش" },
+        ].map((k) => {
+          const Icon = k.icon;
+          return (
+            <div key={k.label} className="kpi card">
+              <div className="kpi-top"><span className="kpi-label">{k.label}</span><span className="kpi-icon" style={{ color: k.c }}><Icon size={15} /></span></div>
+              <div className="kpi-value">{shortNum(k.value)} <small>تومان</small></div>
+              <div className="kpi-foot"><span className="small muted">{k.hint}</span></div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="card" style={{ marginTop: 14 }}>
+        <div className="card-hd">
+          <h3><ShoppingBag size={15} /> چرخه فروش</h3>
+          <Tabs
+            tabs={[
+              { id: "cust", label: "مشتریان", count: customers.length },
+              { id: "inv", label: "فاکتورها", count: salesInvoices.length },
+              { id: "ar", label: "وصول مطالبات" },
+              { id: "com", label: "پورسانت" },
+            ]}
+            active={tab}
+            onChange={setTab}
+          />
+        </div>
+        <div className="card-bd flush">
+          {tab === "cust" && (
+            <table className="table">
+              <thead><tr><th>مشتری</th><th>شهر</th><th>مانده حساب</th><th>سقف اعتبار</th><th>آخرین خرید</th><th>کارشناس</th><th>وضعیت</th></tr></thead>
+              <tbody>
+                {customers.map((c) => (
+                  <tr key={c.name}>
+                    <td className="t-strong">{c.name}</td>
+                    <td className="t-muted">{c.city}</td>
+                    <td className="t-num">{faNum(c.balance)}</td>
+                    <td className="t-num t-muted">{faNum(c.credit)}</td>
+                    <td className="t-muted">{c.last}</td>
+                    <td className="t-muted">{c.rep}</td>
+                    <td><Badge tone={c.status === "فعال" ? "success" : "muted"}>{c.status}</Badge></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+
+          {tab === "inv" && (
+            <table className="table">
+              <thead><tr><th>شماره فاکتور</th><th>مشتری</th><th>تاریخ</th><th>مبلغ</th><th>سرسید</th><th>وضعیت</th></tr></thead>
+              <tbody>
+                {salesInvoices.map((i) => (
+                  <tr key={i.no}>
+                    <td className="t-num">{i.no}</td>
+                    <td className="t-strong">{i.customer}</td>
+                    <td className="t-muted">{i.date}</td>
+                    <td className="t-num">{faNum(i.amount)}</td>
+                    <td className="t-muted">{i.due}</td>
+                    <td><Badge tone={i.status === "ثبت‌شده" ? "success" : i.status === "سرسید" ? "warn" : "muted"}>{i.status}</Badge></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+
+          {tab === "ar" && (
+            <div style={{ padding: 16 }}>
+              <div className="mg-bars">
+                {aging.map((a) => (
+                  <div key={a.bucket} className="mg-bar-row">
+                    <span className="small">{a.bucket}</span>
+                    <div className="mg-bar-track"><i style={{ width: `${(a.amount / totalAR) * 100}%`, background: a.color }} /></div>
+                    <b className="num small">{shortNum(a.amount)}</b>
+                  </div>
+                ))}
+              </div>
+              <table className="table" style={{ marginTop: 14 }}>
+                <thead><tr><th>مشتری</th><th>مانده</th><th>سرسید</th><th>وضعیت</th></tr></thead>
+                <tbody>
+                  {customers.filter((c) => c.balance > 0).map((c) => (
+                    <tr key={c.name}>
+                      <td className="t-strong">{c.name}</td>
+                      <td className="t-num">{faNum(c.balance)}</td>
+                      <td className="t-muted">{c.last}</td>
+                      <td><Badge tone={c.balance > 1_000_000_000 ? "warn" : "success"}>{c.balance > 1_000_000_000 ? "پیگیری" : "جاری"}</Badge></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {tab === "com" && (
+            <table className="table">
+              <thead><tr><th>کارشناس فروش</th><th>هدف</th><th>فروش</th><th>تحقق</th><th>نرخ</th><th>پورسانت</th></tr></thead>
+              <tbody>
+                {commission.map((c) => {
+                  const hit = Math.min(100, (c.sold / c.target) * 100);
+                  return (
+                    <tr key={c.rep}>
+                      <td className="t-strong">{c.rep}</td>
+                      <td className="t-num t-muted">{shortNum(c.target)}</td>
+                      <td className="t-num">{shortNum(c.sold)}</td>
+                      <td style={{ width: 160 }}>
+                        <div className="row" style={{ gap: 8 }}>
+                          <Progress value={hit} tone={hit > 90 ? "mint" : "warn"} thin />
+                          <span className="small">{pct(hit, 0)}</span>
+                        </div>
+                      </td>
+                      <td className="t-muted">{pct(c.rate, 1)}</td>
+                      <td className="t-num">{shortNum((c.sold * c.rate) / 100)}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </div>
+
+      <div className="mg-foot-note"><Users size={13} /> داده‌های فروش از فاکتورهای ثبت‌شده در نرم‌افزار حسابداری و ماژول فروش ایجنت خوانده می‌شود.</div>
+    </div>
+  );
+}

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Database,
@@ -26,28 +26,90 @@ import {
   Package,
   FileSpreadsheet,
   Users,
+  Briefcase,
+  Fingerprint,
+  CalendarClock,
+  FileText,
+  ShoppingBag,
+  Percent,
+  Factory,
+  ClipboardList,
+  Wrench,
+  Truck,
+  ShoppingCart,
+  PackageCheck,
+  ChevronDown,
 } from "lucide-react";
 import { Brand } from "./Brand";
 import { Avatar, useToast } from "./ui";
 import { companies, vouchers, sources, pipelines } from "../lib/data";
 import { toFaDigits } from "../lib/format";
 
-const navGroups: Array<{
-  label: string;
-  items: Array<{ to: string; label: string; icon: typeof LayoutDashboard; badge?: string; badgeTone?: string }>;
-}> = [
+type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; badge?: string; badgeTone?: string };
+type NavGroup = { id: string; label: string; icon: typeof LayoutDashboard; items: NavItem[] };
+
+const navGroups: NavGroup[] = [
   {
+    id: "finance",
     label: "مدیریت مالی",
+    icon: Gauge,
     items: [
       { to: "/", label: "نمای مدیریتی", icon: Gauge },
       { to: "/treasury", label: "خزانه‌داری و چک‌ها", icon: Wallet },
       { to: "/inventory", label: "انبار و دارایی‌ها", icon: Package },
       { to: "/statements", label: "صورت‌های مالی", icon: FileSpreadsheet },
-      { to: "/payroll", label: "حقوق، بیمه و مالیات", icon: Users },
     ],
   },
   {
+    id: "hr",
+    label: "منابع انسانی",
+    icon: Users,
+    items: [
+      { to: "/hr", label: "داشبورد منابع انسانی", icon: Briefcase },
+      { to: "/hr/employees", label: "پرسنل و پرونده", icon: Users },
+      { to: "/hr/attendance", label: "حضور و کارکرد", icon: Fingerprint },
+      { to: "/hr/leaves", label: "مرخصی و ماموریت", icon: CalendarClock },
+      { to: "/hr/payroll", label: "حقوق و دستمزد", icon: Wallet },
+      { to: "/hr/letters", label: "نامه‌ها و مکاتبات", icon: FileText },
+    ],
+  },
+  {
+    id: "sales",
+    label: "فروش",
+    icon: ShoppingBag,
+    items: [
+      { to: "/sales?tab=cust", label: "مشتریان", icon: Users },
+      { to: "/sales?tab=inv", label: "فاکتورها", icon: ReceiptText },
+      { to: "/sales?tab=ar", label: "وصول مطالبات", icon: Wallet },
+      { to: "/sales?tab=com", label: "اهداف و پورسانت", icon: Percent },
+    ],
+  },
+  {
+    id: "production",
+    label: "تولید",
+    icon: Factory,
+    items: [
+      { to: "/production?tab=orders", label: "سفارش تولید", icon: ClipboardList },
+      { to: "/production?tab=plan", label: "برنامه تولید", icon: CalendarClock },
+      { to: "/production?tab=qc", label: "کنترل کیفیت", icon: Gauge },
+      { to: "/production?tab=down", label: "توقفات خط", icon: Wrench },
+    ],
+  },
+  {
+    id: "procurement",
+    label: "تأمین و خرید",
+    icon: Truck,
+    items: [
+      { to: "/procurement?tab=sup", label: "تأمین‌کنندگان", icon: Truck },
+      { to: "/procurement?tab=req", label: "درخواست خرید", icon: ClipboardList },
+      { to: "/procurement?tab=po", label: "سفارش خرید", icon: ShoppingCart },
+      { to: "/procurement?tab=grn", label: "رسید کالا", icon: PackageCheck },
+    ],
+  },
+  {
+    id: "data",
     label: "داده و یکپارچه‌سازی",
+    icon: Database,
     items: [
       { to: "/dashboard", label: "داشبورد یکپارچه‌سازی", icon: LayoutDashboard },
       { to: "/sources", label: "منابع داده", icon: Database },
@@ -56,7 +118,9 @@ const navGroups: Array<{
     ],
   },
   {
+    id: "quality",
     label: "کیفیت و اسناد",
+    icon: ShieldCheck,
     items: [
       { to: "/quality", label: "کیفیت داده", icon: ShieldCheck, badge: "۹" },
       { to: "/vouchers", label: "اسناد حسابداری", icon: ReceiptText, badge: "۲" },
@@ -64,13 +128,27 @@ const navGroups: Array<{
     ],
   },
   {
+    id: "system",
     label: "سیستم",
+    icon: Settings,
     items: [
       { to: "/logs", label: "لاگ و رویدادها", icon: ScrollText },
       { to: "/settings", label: "تنظیمات", icon: Settings },
     ],
   },
 ];
+
+function samePath(to: string, pathname: string) {
+  const p = to.split("?")[0];
+  return p === "/" ? pathname === "/" : pathname === p || pathname.startsWith(p + "/");
+}
+
+function matches(to: string, pathname: string, search: string) {
+  const [p, q] = to.split("?");
+  const pathOk = pathname === p;
+  const searchOk = !q || search === `?${q}`;
+  return pathOk && searchOk;
+}
 
 function useClickOutside<T extends HTMLElement>(onOutside: () => void) {
   const ref = useRef<T>(null);
@@ -86,27 +164,54 @@ function useClickOutside<T extends HTMLElement>(onOutside: () => void) {
 
 /* -------------------------------- Sidebar -------------------------------- */
 function Sidebar() {
+  const loc = useLocation();
+  const activeGroup = navGroups.find((g) => g.items.some((i) => samePath(i.to, loc.pathname)));
+  const exact = activeGroup?.items.find((i) => matches(i.to, loc.pathname, loc.search));
+  const activeTo = exact?.to ?? activeGroup?.items.find((i) => samePath(i.to, loc.pathname))?.to;
+  const [open, setOpen] = useState<Record<string, boolean>>(() => ({ [activeGroup?.id ?? "finance"]: true }));
+
+  useEffect(() => {
+    if (activeGroup) setOpen((o) => (o[activeGroup.id] ? o : { ...o, [activeGroup.id]: true }));
+  }, [activeGroup?.id]);
+
   return (
     <aside className="sidebar">
       <div className="sb-brand">
         <Brand size={38} />
       </div>
       <div className="sb-scroll">
-        {navGroups.map((group) => (
-          <div key={group.label}>
-            <div className="sb-group-label">{group.label}</div>
-            {group.items.map((item) => {
-              const Icon = item.icon;
-              return (
-                <NavLink key={item.to} to={item.to} end={item.to === "/"} className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
-                  <Icon size={17} strokeWidth={1.9} />
-                  <span className="nav-label">{item.label}</span>
-                  {item.badge && <span className={`nav-badge ${item.badgeTone ?? ""}`}>{item.badge}</span>}
-                </NavLink>
-              );
-            })}
-          </div>
-        ))}
+        {navGroups.map((group) => {
+          const isOpen = !!open[group.id];
+          const GroupIcon = group.icon;
+          const groupActive = group.id === activeGroup?.id;
+          return (
+            <div key={group.id} className="sb-group">
+              <button
+                className={`sb-group-btn ${isOpen ? "open" : ""} ${groupActive ? "active" : ""}`}
+                onClick={() => setOpen((o) => ({ ...o, [group.id]: !o[group.id] }))}
+              >
+                <GroupIcon size={14} strokeWidth={1.9} />
+                <span>{group.label}</span>
+                <ChevronDown size={12} className="chev" />
+              </button>
+              {isOpen && (
+                <div className="sb-items">
+                  {group.items.map((item) => {
+                    const Icon = item.icon;
+                    const active = item.to === activeTo;
+                    return (
+                      <NavLink key={item.to} to={item.to} className={() => `nav-item ${active ? "active" : ""}`}>
+                        <Icon size={16} strokeWidth={1.9} />
+                        <span className="nav-label">{item.label}</span>
+                        {item.badge && <span className={`nav-badge ${item.badgeTone ?? ""}`}>{item.badge}</span>}
+                      </NavLink>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
       <div className="sb-foot">
         <div className="usage-card">

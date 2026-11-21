@@ -15,6 +15,14 @@ import Treasury from "./pages/Treasury";
 import Inventory from "./pages/Inventory";
 import Statements from "./pages/Statements";
 import Payroll from "./pages/Payroll";
+import HRDashboard from "./pages/HRDashboard";
+import Employees from "./pages/Employees";
+import Attendance from "./pages/Attendance";
+import Leaves from "./pages/Leaves";
+import Letters from "./pages/Letters";
+import Sales from "./pages/Sales";
+import Production from "./pages/Production";
+import Procurement from "./pages/Procurement";
 
 export default function App() {
   return (
@@ -26,7 +34,15 @@ export default function App() {
         <Route path="/treasury" element={<Treasury />} />
         <Route path="/inventory" element={<Inventory />} />
         <Route path="/statements" element={<Statements />} />
-        <Route path="/payroll" element={<Payroll />} />
+        <Route path="/hr" element={<HRDashboard />} />
+        <Route path="/hr/employees" element={<Employees />} />
+        <Route path="/hr/attendance" element={<Attendance />} />
+        <Route path="/hr/leaves" element={<Leaves />} />
+        <Route path="/hr/payroll" element={<Payroll />} />
+        <Route path="/hr/letters" element={<Letters />} />
+        <Route path="/sales" element={<Sales />} />
+        <Route path="/production" element={<Production />} />
+        <Route path="/procurement" element={<Procurement />} />
         <Route path="/sources" element={<Sources />} />
         <Route path="/agents" element={<Agents />} />
         <Route path="/pipelines" element={<Pipelines />} />
