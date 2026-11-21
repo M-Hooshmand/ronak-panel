@@ -1,0 +1,25 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      PORT: "3000"
+      NODE_ENV: production
+      RONAK_USER: ${RONAK_USER:-admin}
+      RONAK_PASS: ${RONAK_PASS:-changeme}
+      RONAK_SECRET: ${RONAK_SECRET:-devsecret}
+    expose:
+      - "3000"
+    networks:
+      - dokploy-network
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+
+networks:
+  dokploy-network:
+    external: true
