@@ -14,9 +14,11 @@ PLATFORM="$SDK/platforms/android-34/android.jar"
 JAVA_BIN="${JAVA_HOME:+$JAVA_HOME/bin/}"
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 OUT="${1:-$ROOT/build}"
-WORK="$OUT/work"
+# Intermediate files live in a space-free temp dir: javac/d8 choke on @argfiles
+# whose path contains spaces.
+WORK="$(mktemp -d "${TMPDIR:-/tmp}/ronak-build.XXXXXX")"
+trap 'rm -rf "$WORK"' EXIT
 
-rm -rf "$WORK"
 mkdir -p "$WORK/gen" "$WORK/classes" "$WORK/dex" "$OUT"
 
 echo "==> aapt2 compile"
@@ -43,11 +45,11 @@ grep -q 'package="ir.haiocloud.ronak"' "$WORK/AndroidManifest.xml"
 echo "==> javac"
 find "$ROOT/app/src/main/java" "$WORK/gen" -name '*.java' > "$WORK/sources.txt"
 "${JAVA_BIN}javac" -source 17 -target 17 -encoding UTF-8 -nowarn \
-  -classpath "$PLATFORM" -d "$WORK/classes" @"$WORK/sources.txt"
+  -classpath "$PLATFORM" -d "$WORK/classes" "@$WORK/sources.txt"
 
 echo "==> d8"
 find "$WORK/classes" -name '*.class' > "$WORK/classes.txt"
-"$BT/d8" --release --lib "$PLATFORM" --min-api 26 --output "$WORK/dex" @"$WORK/classes.txt"
+"$BT/d8" --release --lib "$PLATFORM" --min-api 26 --output "$WORK/dex" "@$WORK/classes.txt"
 
 echo "==> package"
 cp "$WORK/base.apk" "$WORK/unsigned.apk"
