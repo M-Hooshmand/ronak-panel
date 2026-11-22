@@ -32,7 +32,7 @@ export type Employee = {
 export const employees: Employee[] = [
   { id: 1, code: "EMP-1001", name: "سارا محمدی", role: "مدیر مالی", dept: "مالی", join: "۱۳۹۹/۰۴/۰۱", contract: "دائم", contractEnd: "—", mobile: "۰۹۱۲۱۱۱۲۲۳۳", nid: "۰۰۱۲۳۴۵۶۷۸", base: 320_000_000, status: "فعال" },
   { id: 2, code: "EMP-1002", name: "رضا کریمی", role: "مدیر فروش", dept: "فروش", join: "۱۴۰۰/۰۲/۱۵", contract: "دائم", contractEnd: "—", mobile: "۰۹۱۲۳۳۳۴۴۵۵", nid: "۰۰۲۳۴۵۶۷۸۹", base: 280_000_000, status: "فعال" },
-  { id: 3, code: "EMP-1003", name: "مهدی رستمی", role: "سرپرست انبار", dept: "انبار", join: "۱۴۰۰/۰۹/۱۰", contract: "یک‌ساله", contractEnd: "۱۴۰۵/۰۹/۱۰", mobile: "۰۹۱۹۴۴۴۵۵۶۶", nid: "۰۰۳۴۵۶۷۸۹۰", base: 210_000_000, status: "فعال" },
+  { id: 3, code: "EMP-1003", name: "حمیدرضا بقایی", role: "سرپرست انبار", dept: "انبار", join: "۱۴۰۰/۰۹/۱۰", contract: "یک‌ساله", contractEnd: "۱۴۰۵/۰۹/۱۰", mobile: "۰۹۱۹۴۴۴۵۵۶۶", nid: "۰۰۳۴۵۶۷۸۹۰", base: 210_000_000, status: "فعال" },
   { id: 4, code: "EMP-1004", name: "نگار احمدی", role: "کارشناس حسابداری", dept: "مالی", join: "۱۴۰۱/۰۱/۲۰", contract: "دائم", contractEnd: "—", mobile: "۰۹۳۵۵۵۶۶۷۷۸", nid: "۰۰۴۵۶۷۸۹۰۱", base: 190_000_000, status: "فعال" },
   { id: 5, code: "EMP-1005", name: "امیر حسینی", role: "اپراتور تولید", dept: "تولید", join: "۱۴۰۱/۰۶/۰۵", contract: "یک‌ساله", contractEnd: "۱۴۰۵/۱۲/۰۵", mobile: "۰۹۱۲۶۶۶۷۷۸۸", nid: "۰۰۵۶۷۸۹۰۱۲", base: 165_000_000, status: "مرخصی" },
   { id: 6, code: "EMP-1006", name: "فاطمه رضایی", role: "کارشناس خرید", dept: "تأمین", join: "۱۴۰۲/۰۳/۱۲", contract: "دائم", contractEnd: "—", mobile: "۰۹۳۰۷۷۷۸۸۹۹", nid: "۰۰۶۷۸۹۰۱۲۳", base: 175_000_000, status: "فعال" },
@@ -154,7 +154,7 @@ export const discipline = [
 export const hrAlerts = [
   { tone: "warn", title: "۳ تردد بدون خروج", body: "رکوردهای دستگاه ساعت‌زنی امروز ناقص است.", href: "/hr/attendance" },
   { tone: "danger", title: "۲ مرخصی در انتظار تأیید", body: "درخواست‌های مریم صادقی و علی اکبری.", href: "/hr/leaves" },
-  { tone: "muted", title: "پایان قرارداد نزدیک", body: "قرارداد مهدی رستمی تا ۱۴۰۵/۰۹/۱۰.", href: "/hr/employees" },
+  { tone: "muted", title: "پایان قرارداد نزدیک", body: "قرارداد حمیدرضا بقایی تا ۱۴۰۵/۰۹/۱۰.", href: "/hr/employees" },
   { tone: "indigo", title: "نامه بدون امضا", body: "حکم افزایش حقوق در وضعیت پیش‌نویس است.", href: "/hr/letters" },
 ];
 

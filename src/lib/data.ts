@@ -328,7 +328,7 @@ export const vouchers: Voucher[] = [
     id: "V-003", number: "۱۴۰۵-۰۸۲۹-۰۰۳", date: "۱۴۰۵/۰۸/۲۹", type: "دریافت", status: "posted",
     description: "وصول مطالبات مشتریان — حواله‌های بانکی",
     company: "شرکت پخش آرمان", branch: "تهران — مرکز", source: "پایپلاین دریافتنی",
-    destinationNo: "سپیدار / ۸۴۲۱۲۴", postedAt: "امروز ۰۵:۰۸", createdBy: "مهدی رستمی", reference: "RCV-۹۹۱۲",
+    destinationNo: "سپیدار / ۸۴۲۱۲۴", postedAt: "امروز ۰۵:۰۸", createdBy: "حمیدرضا بقایی", reference: "RCV-۹۹۱۲",
     lines: [L(ACC.bank, 480_000_000, 0), L(ACC.ar, 0, 480_000_000, "مشتریان تهران")],
   },
   {
@@ -378,7 +378,7 @@ export const vouchers: Voucher[] = [
     id: "V-010", number: "۱۴۰۵-۰۸۲۶-۰۰۹", date: "۱۴۰۵/۰۸/۲۶", type: "دریافت", status: "posted",
     description: "واریز نقدی به بانک — صندوق مرکزی",
     company: "شرکت پخش آرمان", branch: "تهران — مرکز", source: "پایپلاین دریافتنی",
-    destinationNo: "سپیدار / ۸۴۱۸۶۰", postedAt: "۲۶ آبان ۱۷:۴۴", createdBy: "مهدی رستمی", reference: "DEP-۵۵۰۱",
+    destinationNo: "سپیدار / ۸۴۱۸۶۰", postedAt: "۲۶ آبان ۱۷:۴۴", createdBy: "حمیدرضا بقایی", reference: "DEP-۵۵۰۱",
     lines: [L(ACC.bank, 120_000_000, 0), L(ACC.cash, 0, 120_000_000)],
   },
   {
@@ -511,7 +511,7 @@ export const logs: LogEntry[] = [
   { id: "L-9818", ts: "۱۴۰۵/۰۸/۲۹ ۱۱:۱۵:۳۳", level: "error", source: "voucher-service", message: "ثبت سند ۱۴۰۵-۰۸۲۸-۰۱۲ ناموفق: کد حساب ۱۰۹۹۹ در مقصد یافت نشد", actor: "system", ip: "10.0.3.21" },
   { id: "L-9817", ts: "۱۴۰۵/۰۸/۲۹ ۱۰:۵۲:۱۹", level: "info", source: "pipeline-runner", message: "پایپلاین «فروش روزانه ← دفتر کل» با ۱۸۴٬۴۲۰ رکورد تکمیل شد", actor: "scheduler", ip: "10.0.3.10" },
   { id: "L-9816", ts: "۱۴۰۵/۰۸/۲۹ ۱۰:۳۱:۰۰", level: "warn", source: "mapping-engine", message: "نگاشت حساب ۶۰۱۰۱ با اطمینان ۸۸٪ نیازمند بازبینی دستی است", actor: "mapping-engine", ip: "10.0.3.18" },
-  { id: "L-9815", ts: "۱۴۰۵/۰۸/۲۹ ۱۰:۰۲:۴۴", level: "info", source: "auth", message: "ورود موفق کاربر m.rostami از مرورگر Chrome / Windows", actor: "m.rostami", ip: "185.55.12.9" },
+  { id: "L-9815", ts: "۱۴۰۵/۰۸/۲۹ ۱۰:۰۲:۴۴", level: "info", source: "auth", message: "ورود موفق کاربر h.baghaei از مرورگر Chrome / Windows", actor: "h.baghaei", ip: "185.55.12.9" },
   { id: "L-9814", ts: "۱۴۰۵/۰۸/۲۹ ۰۹:۴۸:۱۲", level: "info", source: "agent-gateway", message: "توکن ایجنت RONAK-AG-02 با موفقیت چرخش یافت", actor: "system", ip: "10.20.4.18" },
   { id: "L-9813", ts: "۱۴۰۵/۰۸/۲۹ ۰۹:۳۰:۰۱", level: "info", source: "connector", message: "اتصال TLS به 10.31.0.7:1521 برقرار شد (TLS 1.3, AES-256-GCM)", actor: "agent", ip: "10.31.0.7" },
   { id: "L-9812", ts: "۱۴۰۵/۰۸/۲۹ ۰۸:۵۹:۵۷", level: "warn", source: "connector", message: "کندی پاسخ‌دهی منبع «فروش مشهد» (۲.۸ ثانیه) — تلاش مجدد انجام شد", actor: "agent", ip: "10.20.6.24" },
@@ -559,7 +559,7 @@ export const roles = [
 ];
 
 export const teamMembers = [
-  { name: "مهدی رستمی", email: "m.rostami@arman.co", role: "مدیر سازمان", last: "آنلاین", initials: "م", color: "#2FE0BE" },
+  { name: "حمیدرضا بقایی", email: "h.baghaei@arman.co", role: "مدیر سازمان", last: "آنلاین", initials: "ح", color: "#2FE0BE" },
   { name: "سارا کاظمی", email: "s.kazemi@pars.co", role: "حسابدار ارشد", last: "۱۲ دقیقه پیش", initials: "س", color: "#7C8CFF" },
   { name: "امیر توکلی", email: "a.tavakoli@arman.co", role: "تحلیلگر داده", last: "۱ ساعت پیش", initials: "ا", color: "#F7B955" },
   { name: "نگار شریفی", email: "n.sharifi@nikro.co", role: "پشتیبانی فنی", last: "دیروز", initials: "ن", color: "#FF6B81" },

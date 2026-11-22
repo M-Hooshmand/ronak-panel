@@ -70,11 +70,11 @@ export const suppliers = [
 ];
 
 export const purchaseRequests = [
-  { no: "PR-901", item: "ورق گالوانیزه ۰٫۵", qty: "۳٬۲۰۰ کیلوگرم", requester: "مهدی رستمی", date: "۱۴۰۵/۰۸/۲۸", status: "در انتظار تأیید" },
+  { no: "PR-901", item: "ورق گالوانیزه ۰٫۵", qty: "۳٬۲۰۰ کیلوگرم", requester: "حمیدرضا بقایی", date: "۱۴۰۵/۰۸/۲۸", status: "در انتظار تأیید" },
   { no: "PR-902", item: "پروفیل آلومینیوم ۴۰×۴۰", qty: "۴۰۰ شاخه", requester: "حسین مرادی", date: "۱۴۰۵/۰۸/۲۷", status: "تأییدشده" },
   { no: "PR-903", item: "رنگ پودری RAL 9016", qty: "۲۵۰ کیلوگرم", requester: "حسین مرادی", date: "۱۴۰۵/۰۸/۲۷", status: "در انتظار تأیید" },
   { no: "PR-904", item: "باکس کنترل هوشمند", qty: "۶۰ عدد", requester: "رضا کریمی", date: "۱۴۰۵/۰۸/۲۶", status: "تأییدشده" },
-  { no: "PR-905", item: "پیچ و مهره استیل", qty: "۱٬۰۰۰ بسته", requester: "مهدی رستمی", date: "۱۴۰۵/۰۸/۲۵", status: "ردشده" },
+  { no: "PR-905", item: "پیچ و مهره استیل", qty: "۱٬۰۰۰ بسته", requester: "حمیدرضا بقایی", date: "۱۴۰۵/۰۸/۲۵", status: "ردشده" },
 ];
 
 export const purchaseOrders = [

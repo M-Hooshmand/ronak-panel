@@ -405,7 +405,7 @@ export default function Settings() {
                 </div>
                 <div className="channel-grid">
                   {[
-                    { k: "email", icon: Mail, t: "ایمیل", s: "m.rostami@arman.co", color: "#7C8CFF" },
+                    { k: "email", icon: Mail, t: "ایمیل", s: "h.baghaei@arman.co", color: "#7C8CFF" },
                     { k: "bale", icon: Send, t: "بله", s: "@arman_finance", color: "#2FE0BE" },
                     { k: "sms", icon: Smartphone, t: "پیامک", s: "۰۹۱۲••••۴۵۳", color: "#F7B955" },
                   ].map((c) => {

@@ -425,9 +425,9 @@ function Topbar() {
         <span className="topbar-divider" />
         <div style={{ position: "relative" }} ref={userRef}>
           <button className="user-btn" onClick={() => setUserOpen((v) => !v)} aria-expanded={userOpen}>
-            <span className="avatar">م</span>
+            <span className="avatar">ح</span>
             <span className="user-meta">
-              <b>مهدی رستمی</b>
+              <b>حمیدرضا بقایی</b>
               <span>مدیر سازمان</span>
             </span>
             <ChevronsUpDown size={13} style={{ color: "var(--muted)" }} />
@@ -436,10 +436,10 @@ function Topbar() {
             <div className="pop" style={{ minWidth: 230 }}>
               <div style={{ padding: "8px 9px 10px" }}>
                 <div className="row" style={{ marginBottom: 2 }}>
-                  <Avatar name="مهدی رستمی" color="#2FE0BE" size={28} />
+                  <Avatar name="حمیدرضا بقایی" color="#2FE0BE" size={28} />
                   <div>
-                    <b style={{ fontSize: 12, display: "block" }}>مهدی رستمی</b>
-                    <span className="small muted-2">m.rostami@arman.co</span>
+                    <b style={{ fontSize: 12, display: "block" }}>حمیدرضا بقایی</b>
+                    <span className="small muted-2">h.baghaei@arman.co</span>
                   </div>
                 </div>
                 <span className="badge badge-mint no-dot" style={{ marginTop: 6 }}>مدیر سازمان · آرمان</span>
