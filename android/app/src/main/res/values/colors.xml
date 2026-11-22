@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="brand_bg">#0C1420</color>
+    <color name="brand_teal">#2FE0BE</color>
+    <color name="brand_indigo">#7C8CFF</color>
+    <color name="brand_text">#F3F4F6</color>
+    <color name="brand_text_dim">#9CA3AF</color>
+</resources>

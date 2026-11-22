@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">روناک</string>
+    <string name="error_title">اتصال برقرار نشد</string>
+    <string name="error_body">اینترنت دستگاه را بررسی کنید و دوباره تلاش کنید.</string>
+    <string name="retry">تلاش مجدد</string>
+</resources>
