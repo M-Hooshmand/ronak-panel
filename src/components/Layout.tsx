@@ -13,6 +13,7 @@ import {
   Bell,
   Search,
   ChevronsUpDown,
+  Menu,
   Check,
   CircleHelp,
   LogOut,
@@ -163,7 +164,7 @@ function useClickOutside<T extends HTMLElement>(onOutside: () => void) {
 }
 
 /* -------------------------------- Sidebar -------------------------------- */
-function Sidebar() {
+function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const loc = useLocation();
   const activeGroup = navGroups.find((g) => g.items.some((i) => samePath(i.to, loc.pathname)));
   const exact = activeGroup?.items.find((i) => matches(i.to, loc.pathname, loc.search));
@@ -175,7 +176,7 @@ function Sidebar() {
   }, [activeGroup?.id]);
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${isOpen ? "open" : ""}`}>
       <div className="sb-brand">
         <Brand size={38} />
       </div>
@@ -200,7 +201,12 @@ function Sidebar() {
                     const Icon = item.icon;
                     const active = item.to === activeTo;
                     return (
-                      <NavLink key={item.to} to={item.to} className={() => `nav-item ${active ? "active" : ""}`}>
+                      <NavLink
+                        key={item.to}
+                        to={item.to}
+                        onClick={onClose}
+                        className={() => `nav-item ${active ? "active" : ""}`}
+                      >
                         <Icon size={16} strokeWidth={1.9} />
                         <span className="nav-label">{item.label}</span>
                         {item.badge && <span className={`nav-badge ${item.badgeTone ?? ""}`}>{item.badge}</span>}
@@ -237,7 +243,7 @@ function Sidebar() {
 }
 
 /* -------------------------------- Topbar -------------------------------- */
-function Topbar() {
+function Topbar({ onMenu }: { onMenu: () => void }) {
   const navigate = useNavigate();
   const toast = useToast();
   const [company, setCompany] = useState(companies[0]);
@@ -266,6 +272,9 @@ function Topbar() {
 
   return (
     <header className="topbar">
+      <button className="nav-toggle" aria-label="منو" onClick={onMenu}>
+        <Menu size={20} strokeWidth={2} />
+      </button>
       <div className="co-switch" ref={coRef}>
         <button className="co-btn" onClick={() => setCoOpen((v) => !v)} aria-expanded={coOpen}>
           <span className="co-avatar">{company.short.slice(0, 1)}</span>
@@ -477,6 +486,12 @@ function Topbar() {
 /* -------------------------------- Layout -------------------------------- */
 export default function Layout() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [navOpen, setNavOpen] = useState(false);
+
+  useEffect(() => {
+    setNavOpen(false);
+  }, [location.pathname]);
 
   useEffect(() => {
     if (import.meta.env.DEV) return;
@@ -499,9 +514,10 @@ export default function Layout() {
 
   return (
     <div className="app">
-      <Sidebar />
+      <Sidebar isOpen={navOpen} onClose={() => setNavOpen(false)} />
+      {navOpen && <div className="sb-backdrop" onClick={() => setNavOpen(false)} />}
       <div className="main">
-        <Topbar />
+        <Topbar onMenu={() => setNavOpen(true)} />
         <main className="page">
           <Outlet />
         </main>

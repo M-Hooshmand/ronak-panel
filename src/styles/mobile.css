@@ -1,0 +1,199 @@
+/* ==========================================================================
+   Mobile shell (phones, <= 760px)
+   Desktop uses a fixed sidebar + content column. On a phone the sidebar
+   becomes an off-canvas drawer and every multi-column row collapses so the
+   panel is usable in the app and in the phone browser.
+   ========================================================================== */
+
+.nav-toggle {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
+  /* ---------- Shell ---------- */
+  .app {
+    display: block;
+  }
+
+  .sidebar {
+    width: min(84vw, 296px);
+    height: 100dvh;
+    transform: translateX(100%);
+    transition: transform 0.22s ease;
+    z-index: 45;
+  }
+  .sidebar.open {
+    transform: none;
+    box-shadow: -24px 0 60px rgba(0, 0, 0, 0.6);
+  }
+  .sb-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 44;
+    background: rgba(4, 8, 14, 0.62);
+    backdrop-filter: blur(2px);
+  }
+
+  /* undo the icon-only rail from the 1180px breakpoint */
+  .sidebar .sb-brand {
+    justify-content: flex-start;
+    padding: 18px 18px 14px;
+  }
+  .sidebar .brand-text {
+    display: block;
+  }
+  .sidebar .sb-group-label {
+    font-size: 10px;
+    padding: 14px 10px 7px;
+  }
+  .sidebar .sb-group-label::after {
+    display: block;
+  }
+  .sidebar .nav-item {
+    justify-content: flex-start;
+    padding: 9px 11px;
+  }
+  .sidebar .nav-item span.nav-label,
+  .sidebar .nav-badge {
+    display: inline;
+  }
+  .sidebar .usage-card {
+    display: block;
+  }
+  .sidebar .user-meta {
+    display: block;
+  }
+  .sidebar .sb-version {
+    justify-content: space-between;
+  }
+  .sidebar .sb-version span:last-child {
+    display: inline;
+  }
+
+  /* ---------- Topbar ---------- */
+  .main {
+    margin-inline-start: 0;
+  }
+  .nav-toggle {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    flex: none;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-2);
+  }
+  .nav-toggle:active {
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .topbar {
+    padding: 0 12px;
+    gap: 8px;
+  }
+  .topbar-divider {
+    display: none;
+  }
+  .co-btn {
+    padding: 5px 7px;
+    gap: 7px;
+  }
+  .co-meta {
+    display: none;
+  }
+  .co-btn > svg:last-child {
+    display: none;
+  }
+
+  /* ---------- Page ---------- */
+  .page {
+    padding: 14px 12px 30px;
+    max-width: 100%;
+  }
+  h1 {
+    font-size: 19px;
+    line-height: 1.45;
+  }
+  .page-head {
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .page-head p {
+    font-size: 12px;
+  }
+  .page-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .page-actions > .btn,
+  .page-actions > button {
+    flex: 1;
+    justify-content: center;
+  }
+
+  /* ---------- Cards and grids ---------- */
+  .kpi-grid,
+  .mini-stats,
+  .kind-grid,
+  .ps-grid,
+  .report-grid,
+  .report-links,
+  .roles-grid,
+  .settings-body,
+  .agent-grid,
+  .rules-grid,
+  .channel-grid,
+  .stmt-bs,
+  .mg-mini-grid,
+  .mg-accounts,
+  .dash-row-main,
+  .dash-row-2,
+  .quality-top,
+  .log-bottom,
+  .ld-grid,
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* pages that place rows with inline grid styles */
+  [style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  .kpi-value {
+    font-size: 21px;
+  }
+  .card-hd {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* ---------- Tables, tabs, popovers ---------- */
+  .tbl-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .table {
+    min-width: 520px;
+  }
+  .tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .pop {
+    max-width: calc(100vw - 24px);
+  }
+  .toasts {
+    inset-inline: 12px;
+  }
+}
