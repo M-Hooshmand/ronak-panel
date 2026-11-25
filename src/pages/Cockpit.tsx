@@ -320,7 +320,7 @@ export default function Cockpit() {
               <Users size={15} /> حقوق، بیمه و مالیات
               <span className="ch-sub">تعهدات جاری</span>
             </h3>
-            <button className="btn btn-ghost btn-xs" onClick={() => navigate("/hr/payroll")}>
+            <button className="btn btn-ghost btn-xs" onClick={() => navigate("/payroll")}>
               جزئیات <ChevronLeft size={12} />
             </button>
           </div>

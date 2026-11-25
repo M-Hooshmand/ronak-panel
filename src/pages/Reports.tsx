@@ -15,17 +15,13 @@ import {
   Scale,
   Users,
   CircleCheck,
-  TriangleAlert,
-  Clock,
 } from "lucide-react";
-import { AreaChart, BarChart, Donut, GroupedBars, HBarChart, Sparkline, StackedBar } from "../components/charts";
+import { AreaChart, Donut, GroupedBars, HBarChart, Sparkline, StackedBar } from "../components/charts";
 import { Badge, Tabs, useToast } from "../components/ui";
 import {
   salesTrend,
   balanceSheet,
   vouchersByStatus,
-  agentPerformance,
-  agents,
   voucherTotal,
 } from "../lib/data";
 import { vouchers } from "../lib/data";
@@ -75,7 +71,7 @@ export default function Reports() {
             <h1>گزارش‌ها</h1>
             <Badge tone="indigo" dot={false} icon={<CalendarRange size={10} />}>دوره سال ۱۴۰۴</Badge>
           </div>
-          <p>تحلیل روند فروش، ترازنامه، وضعیت اسناد و عملکرد ایجنت‌ها</p>
+          <p>تحلیل روند فروش، ترازنامه و وضعیت اسناد</p>
         </div>
         <div className="page-actions">
           <div className="seg">
@@ -119,7 +115,6 @@ export default function Reports() {
             { id: "sales", label: "روند فروش" },
             { id: "balance", label: "ترازنامه" },
             { id: "vouchers", label: "اسناد به تفکیک وضعیت" },
-            { id: "agents", label: "عملکرد ایجنت‌ها" },
           ]}
           active={tab}
           onChange={setTab}
@@ -392,80 +387,6 @@ export default function Reports() {
           </div>
         )}
 
-        {tab === "agents" && (
-          <div className="report-body">
-            <div className="report-grid">
-              <div className="card inner">
-                <div className="card-hd"><h3>نرخ موفقیت ایجنت‌ها</h3><span className="small muted-2">درصد اجرای موفق</span></div>
-                <div className="card-bd" style={{ paddingTop: 8 }}>
-                  <BarChart
-                    data={agentPerformance.map((a) => ({
-                      label: a.name,
-                      value: a.value,
-                      color: a.value > 95 ? "#2FE0BE" : a.value > 70 ? "#F7B955" : "#FF6B81",
-                      sub: `${faNum(a.records)} رکورد`,
-                    }))}
-                    height={230}
-                    format={(n) => `${faNum(n, 1)}٪`}
-                    labels
-                  />
-                </div>
-              </div>
-              <div className="col" style={{ gap: 14 }}>
-                <div className="card inner">
-                  <div className="card-hd"><h3><Clock size={15} /> زمان پاسخ ایجنت</h3></div>
-                  <div className="card-bd" style={{ paddingTop: 10 }}>
-                    <div className="kv"><span className="k">میانگین تأخیر ضربان</span><span className="v">۳۱ ثانیه</span></div>
-                    <div className="kv"><span className="k">بدترین ایجنت</span><span className="v danger">NKR-05 · آفلاین</span></div>
-                    <div className="kv"><span className="k">پایدارترین ایجنت</span><span className="v mint">PRS-04 · ۹۹٫۹٪</span></div>
-                    <div className="kv"><span className="k">مجموع رکورد ۳۰ روز</span><span className="v">{shortNum(7_772_000)}</span></div>
-                  </div>
-                </div>
-                <div className="card inner">
-                  <div className="card-hd"><h3><TriangleAlert size={15} /> هشدارها</h3></div>
-                  <div className="card-bd" style={{ paddingTop: 10 }}>
-                    <div className="row" style={{ marginBottom: 8 }}><span className="dot danger" /><span className="small">NKR-05 از ۱۸ ساعت پیش آفلاین است</span></div>
-                    <div className="row" style={{ marginBottom: 8 }}><span className="dot warn" /><span className="small">ARN-03 صف ارسال ۱۱۸ رکوردی دارد</span></div>
-                    <div className="row"><span className="dot warn" /><span className="small">نسخه ۲٫۴٫۱ برای ۳ ایجنت آماده نصب است</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="card inner" style={{ marginTop: 14 }}>
-              <div className="card-hd"><h3>ریز عملکرد ایجنت‌ها</h3><span className="small muted-2">۳۰ روز گذشته</span></div>
-              <div className="tbl-wrap">
-                <table className="table table-compact">
-                  <thead>
-                    <tr><th>ایجنت</th><th>شرکت</th><th>نسخه</th><th>رکورد پردازش‌شده</th><th>نرخ موفقیت</th><th>وضعیت</th><th>روند</th></tr>
-                  </thead>
-                  <tbody>
-                    {agents.map((a, i) => {
-                      const perf = agentPerformance[i];
-                      return (
-                        <tr key={a.id}>
-                          <td className="mono t-strong">{a.code}</td>
-                          <td>{a.company.replace("شرکت ", "").replace("گروه صنعتی ", "")}</td>
-                          <td className="mono">{a.version}</td>
-                          <td className="t-num">{faNum(perf.records)}</td>
-                          <td>
-                            <span className={`delta ${perf.value > 95 ? "up" : perf.value > 70 ? "flat" : "down"}`}>{pct(perf.value)}</span>
-                          </td>
-                          <td>
-                            <Badge tone={a.status === "online" ? "success" : a.status === "degraded" ? "warn" : "danger"}>
-                              {a.status === "online" ? "آنلاین" : a.status === "degraded" ? "نیازمند بررسی" : "آفلاین"}
-                            </Badge>
-                          </td>
-                          <td><Sparkline data={a.heartbeat} width={80} height={24} color={a.status === "offline" ? "#FF6B81" : "#2FE0BE"} /></td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
       <div className="card" style={{ marginTop: 14 }}>

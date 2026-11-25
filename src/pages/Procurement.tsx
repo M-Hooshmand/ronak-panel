@@ -47,7 +47,6 @@ export default function Procurement() {
           <Tabs
             tabs={[
               { id: "sup", label: "تأمین‌کنندگان", count: suppliers.length },
-              { id: "req", label: "درخواست خرید", count: purchaseRequests.length },
               { id: "po", label: "سفارش خرید", count: purchaseOrders.length },
               { id: "grn", label: "رسید کالا", count: receipts.length },
             ]}
@@ -78,23 +77,6 @@ export default function Procurement() {
             </table>
           )}
 
-          {tab === "req" && (
-            <table className="table">
-              <thead><tr><th>شماره</th><th>کالا</th><th>مقدار</th><th>درخواست‌کننده</th><th>تاریخ</th><th>وضعیت</th></tr></thead>
-              <tbody>
-                {purchaseRequests.map((r) => (
-                  <tr key={r.no}>
-                    <td className="t-num">{r.no}</td>
-                    <td className="t-strong">{r.item}</td>
-                    <td className="t-muted">{r.qty}</td>
-                    <td className="t-muted">{r.requester}</td>
-                    <td className="t-muted">{r.date}</td>
-                    <td><Badge tone={r.status === "تأییدشده" ? "success" : r.status === "ردشده" ? "danger" : "warn"}>{r.status}</Badge></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
 
           {tab === "po" && (
             <table className="table">

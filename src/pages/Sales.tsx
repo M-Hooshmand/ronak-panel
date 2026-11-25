@@ -1,8 +1,8 @@
 import { useSearchParams } from "react-router-dom";
 import { ShoppingBag, Users, ReceiptText, Wallet, Percent, Download, Plus } from "lucide-react";
-import { Badge, Tabs, Progress, useToast } from "../components/ui";
-import { faNum, shortNum, pct } from "../lib/format";
-import { customers, salesInvoices, aging, commission, salesTotals } from "../lib/business";
+import { Badge, Tabs, useToast } from "../components/ui";
+import { faNum, shortNum } from "../lib/format";
+import { customers, salesInvoices, aging, salesTotals } from "../lib/business";
 
 export default function Sales() {
   const [params, setParams] = useSearchParams();
@@ -29,7 +29,7 @@ export default function Sales() {
           { label: "فروش اسفند ۱۴۰۴", value: salesTotals.esfand, icon: ShoppingBag, c: "#2FE0BE", hint: `${faNum(salesTotals.esfandCount)} فاکتور` },
           { label: "وصول‌شده", value: salesTotals.receipts, icon: Wallet, c: "#7BE495", hint: `${faNum(salesTotals.receiptCount)} فیش دریافت` },
           { label: "مطالبات باز", value: totalAR, icon: ReceiptText, c: "#F7B955", hint: `${faNum(customers.length)} مشتری` },
-          { label: "پورسانت ماه", value: Math.round(commission.reduce((s, c) => s + (c.sold * c.rate) / 100, 0)), icon: Percent, c: "#7C8CFF", hint: "بدون داده پرسنلی" },
+          { label: "میانگین هر فاکتور", value: Math.round(salesTotals.sales / salesTotals.invoices), icon: Percent, c: "#7C8CFF", hint: `${faNum(salesTotals.invoices)} فاکتور` },
         ].map((k) => {
           const Icon = k.icon;
           return (
@@ -50,7 +50,6 @@ export default function Sales() {
               { id: "cust", label: "مشتریان", count: customers.length },
               { id: "inv", label: "فاکتورها", count: salesInvoices.length },
               { id: "ar", label: "وصول مطالبات" },
-              { id: "com", label: "پورسانت" },
             ]}
             active={tab}
             onChange={setTab}
@@ -121,31 +120,6 @@ export default function Sales() {
             </div>
           )}
 
-          {tab === "com" && (
-            <table className="table">
-              <thead><tr><th>کارشناس فروش</th><th>هدف</th><th>فروش</th><th>تحقق</th><th>نرخ</th><th>پورسانت</th></tr></thead>
-              <tbody>
-                {commission.map((c) => {
-                  const hit = Math.min(100, (c.sold / c.target) * 100);
-                  return (
-                    <tr key={c.rep}>
-                      <td className="t-strong">{c.rep}</td>
-                      <td className="t-num t-muted">{shortNum(c.target)}</td>
-                      <td className="t-num">{shortNum(c.sold)}</td>
-                      <td style={{ width: 160 }}>
-                        <div className="row" style={{ gap: 8 }}>
-                          <Progress value={hit} tone={hit > 90 ? "mint" : "warn"} thin />
-                          <span className="small">{pct(hit, 0)}</span>
-                        </div>
-                      </td>
-                      <td className="t-muted">{pct(c.rate, 1)}</td>
-                      <td className="t-num">{shortNum((c.sold * c.rate) / 100)}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          )}
         </div>
       </div>
 
