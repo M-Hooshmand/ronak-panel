@@ -5,8 +5,6 @@ import {
   ReceiptText,
   CircleAlert,
   Clock3,
-  ArrowUpRight,
-  ArrowDownRight,
   RefreshCw,
   Download,
   ChevronLeft,
@@ -23,10 +21,10 @@ const statusTone: Record<CheckStatus, Tone> = {
 };
 
 const kpis = [
-  { label: "جمع نقدینگی", value: totalCash, icon: Wallet, tone: "mint", hint: "۵ حساب متصل" },
-  { label: "وصول‌شده — آبان", value: clearedThisMonth, icon: ReceiptText, tone: "indigo", hint: "۳ چک" },
-  { label: "در جریان", value: inCourse, icon: Clock3, tone: "warn", hint: "۳ چک تا ۱۰ روز" },
-  { label: "برگشتی", value: bounced, icon: CircleAlert, tone: "danger", hint: "۱ چک نیازمند پیگیری" },
+  { label: "جمع نقدینگی", value: totalCash, icon: Wallet, tone: "mint", hint: `${faNum(cashAccounts.length)} حساب متصل` },
+  { label: "وصول‌شده — اسفند", value: clearedThisMonth, icon: ReceiptText, tone: "indigo", hint: `${faNum(checks.filter((c) => c.status === "وصول‌شده").length)} چک` },
+  { label: "در جریان", value: inCourse, icon: Clock3, tone: "warn", hint: `${faNum(checks.filter((c) => c.status === "در جریان").length)} چک` },
+  { label: "برگشتی", value: bounced, icon: CircleAlert, tone: "danger", hint: `${faNum(checks.filter((c) => c.status === "برگشتی").length)} چک نیازمند پیگیری` },
 ];
 
 const toneMap: Record<string, string> = {
@@ -77,7 +75,7 @@ export default function Treasury() {
               </div>
               <div className="kpi-foot">
                 <span className="small muted">{k.hint}</span>
-                <span className="small muted">{pct((k.value / totalCash) * 100, 0)} از نقد</span>
+                <span className="small muted">{pct((k.value / Math.max(totalCash + inCourse, 1)) * 100, 0)} از نقد و چک</span>
               </div>
             </div>
           );
@@ -94,9 +92,8 @@ export default function Treasury() {
             <div className="mg-acc-name">{a.name}</div>
             <div className="mg-acc-value">{faNum(a.balance)} <small>تومان</small></div>
             <div className="mg-acc-foot">
-              <span className={a.change >= 0 ? "up" : "down"}>
-                {a.change >= 0 ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
-                {pct(Math.abs(a.change), 1)}
+              <span className="small muted">
+                {pct(a.change, 1)} از نقد
               </span>
               <span className="small muted">آخرین همگام‌سازی {a.last}</span>
             </div>
@@ -108,7 +105,7 @@ export default function Treasury() {
         <div className="card-hd">
           <h3>
             <ReceiptText size={15} /> چک‌ها
-            <span className="ch-sub">آبان ۱۴۰۵</span>
+            <span className="ch-sub">سال ۱۴۰۴</span>
           </h3>
           <Tabs
             tabs={[

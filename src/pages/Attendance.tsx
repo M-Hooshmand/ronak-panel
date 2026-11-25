@@ -30,7 +30,7 @@ export default function Attendance() {
           <button className="btn btn-sm" onClick={() => toast("ورود دستی", "فرم ثبت تردد دستی باز شد.", "info")}>
             <Upload size={13} /> ثبت دستی
           </button>
-          <button className="btn btn-sm" onClick={() => toast("خروجی اکسل", "ریز کارکرد آبان آماده دانلود شد.", "success")}>
+          <button className="btn btn-sm" onClick={() => toast("خروجی اکسل", "ریز کارکرد اسفند آماده دانلود شد.", "success")}>
             <Download size={13} /> خروجی
           </button>
         </div>
@@ -38,9 +38,9 @@ export default function Attendance() {
 
       <div className="kpi-grid">
         {[
-          { label: "حاضر امروز", value: `${faNum(attendanceToday.filter((a) => a.status === "حاضر" || a.status === "تأخیر").length + 23)} نفر`, hint: `از ۳۴ نفر شیفت امروز`, icon: Fingerprint, c: "#2FE0BE" },
-          { label: "اضافه‌کاری آبان", value: `${faNum(Math.round(ot))} ساعت`, hint: "جمع کل پرسنل", icon: Clock3, c: "#7C8CFF" },
-          { label: "تأخیر آبان", value: `${faNum(delay)} دقیقه`, hint: "۴ نفر بالای ۳۰ دقیقه", icon: TriangleAlert, c: "#F7B955" },
+          { label: "حاضر امروز", value: `${faNum(attendanceToday.filter((a) => a.status === "حاضر" || a.status === "تأخیر").length)} نفر`, hint: "بدون داده حضور", icon: Fingerprint, c: "#2FE0BE" },
+          { label: "اضافه‌کاری اسفند", value: `${faNum(Math.round(ot))} ساعت`, hint: "جمع کل پرسنل", icon: Clock3, c: "#7C8CFF" },
+          { label: "تأخیر اسفند", value: `${faNum(delay)} دقیقه`, hint: "بدون داده حضور", icon: TriangleAlert, c: "#F7B955" },
           { label: "تردد ناقص", value: `${faNum(timeclock.unmatched)} رکورد`, hint: "بدون ثبت خروج", icon: Wifi, c: "#FF6B81" },
         ].map((k) => {
           const Icon = k.icon;
@@ -57,7 +57,7 @@ export default function Attendance() {
       <div style={{ display: "grid", gridTemplateColumns: "1.7fr 1fr", gap: 14, marginTop: 14 }}>
         <div className="card">
           <div className="card-hd">
-            <h3><Fingerprint size={15} /> {tab === "today" ? "ریز تردد امروز" : "خلاصه کارکرد آبان"}</h3>
+            <h3><Fingerprint size={15} /> {tab === "today" ? "ریز تردد امروز" : "خلاصه کارکرد اسفند"}</h3>
             <Tabs tabs={[{ id: "today", label: "امروز" }, { id: "month", label: "خلاصه ماه" }]} active={tab} onChange={setTab} />
           </div>
           <div className="card-bd flush">

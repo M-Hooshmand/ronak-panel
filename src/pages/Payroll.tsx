@@ -34,7 +34,7 @@ export default function Payroll() {
           <p>حقوق و دستمزد، بیمه سهم کارگر و کارفرما، مالیات حقوق، ارزش افزوده و مالیات بر درآمد</p>
         </div>
         <div className="page-actions">
-          <button className="btn btn-sm" onClick={() => toast("فیش حقوقی", "فایل فیش‌های آبان آماده دانلود شد.", "success")}>
+          <button className="btn btn-sm" onClick={() => toast("فیش حقوقی", "فایل فیش‌های اسفند آماده دانلود شد.", "success")}>
             <Download size={13} /> فیش‌ها
           </button>
           <button className="btn btn-sm" onClick={() => toast("محاسبه مجدد", "حقوق و بیمه بر پایه لیست پرسنل محاسبه شد.", "info")}>
@@ -45,10 +45,10 @@ export default function Payroll() {
 
       <div className="kpi-grid">
         {[
-          { label: "حقوق و مزایای آبان", value: payrollGross, icon: Users, tone: "mint", hint: `${faNum(payrollRows.length)} پرسنل` },
+          { label: "حقوق و مزایای اسفند", value: payrollGross, icon: Users, tone: "mint", hint: `${faNum(payrollRows.length)} پرسنل` },
           { label: "بیمه سهم کارفرما", value: employerInsurance, icon: HeartPulse, tone: "indigo", hint: "۲۳٪ حقوق پایه" },
-          { label: "مالیات حقوق", value: payrollTotals.tax, icon: Landmark, tone: "warn", hint: "پرداخت تا ۱۵ آذر" },
-          { label: "ارزش افزوده پرداختنی", value: vatPayable, icon: Percent, tone: "danger", hint: "دوره مهر — سرسید ۱۵ آذر" },
+          { label: "مالیات حقوق", value: payrollTotals.tax, icon: Landmark, tone: "warn", hint: "سال ۱۴۰۴ — ثبت‌شده در دفتر کل" },
+          { label: "ارزش افزوده پرداختنی", value: vatPayable, icon: Percent, tone: "danger", hint: "۱۴۰۴ — از حساب‌های معین" },
         ].map((k) => {
           const Icon = k.icon;
           return (
@@ -72,7 +72,7 @@ export default function Payroll() {
         <div className="card">
           <div className="card-hd">
             <h3>
-              <Users size={15} /> لیست حقوق آبان ۱۴۰۵
+              <Users size={15} /> لیست حقوق سال ۱۴۰۴
               <span className="ch-sub">{faNum(payrollRows.length)} نفر</span>
             </h3>
             <span className="chip small">خالص پرداختی {shortNum(net)}</span>

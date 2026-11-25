@@ -63,6 +63,8 @@ export function AreaChart({
   const xOf = (i: number) => left + (data.length <= 1 ? 0 : (i / (data.length - 1)) * plotW);
   const yOf = (v: number) => bottom - (v / maxVal) * (bottom - top);
 
+  if (!data.length || !series.length) return null;
+
   const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = wrapRef.current?.querySelector("svg");
     if (!el || data.length === 0) return;
@@ -207,6 +209,7 @@ export function Sparkline({
   strokeWidth?: number;
 }) {
   const uid = useId().replace(/[:]/g, "");
+  if (!data.length) return null;
   const max = Math.max(...data);
   const min = Math.min(...data);
   const range = max - min || 1;

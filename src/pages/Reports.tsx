@@ -29,6 +29,7 @@ import {
   voucherTotal,
 } from "../lib/data";
 import { vouchers } from "../lib/data";
+import { salesTotals } from "../lib/business";
 import { faNum, pct, shortNum } from "../lib/format";
 
 type ReportTab = "sales" | "balance" | "vouchers" | "agents";
@@ -72,7 +73,7 @@ export default function Reports() {
         <div>
           <div className="ph-title">
             <h1>گزارش‌ها</h1>
-            <Badge tone="indigo" dot={false} icon={<CalendarRange size={10} />}>دوره آبان ۱۴۰۵</Badge>
+            <Badge tone="indigo" dot={false} icon={<CalendarRange size={10} />}>دوره سال ۱۴۰۴</Badge>
           </div>
           <p>تحلیل روند فروش، ترازنامه، وضعیت اسناد و عملکرد ایجنت‌ها</p>
         </div>
@@ -96,15 +97,15 @@ export default function Reports() {
       <div className="mini-stats">
         <div className="mini-stat">
           <span className="ms-ic" style={{ color: "var(--mint)" }}><TrendingUp size={15} /></span>
-          <div><div className="ms-k">فروش آبان (میلیون تومان)</div><div className="ms-v">{faNum(7_240)} <small>+۱۰٫۷٪</small></div></div>
+          <div><div className="ms-k">فروش اسفند (میلیون تومان)</div><div className="ms-v">{faNum(Math.round(salesTotals.esfand / 1_000_000))} <small>{faNum(salesTotals.esfandCount)} فاکتور</small></div></div>
         </div>
         <div className="mini-stat">
           <span className="ms-ic" style={{ color: "var(--indigo)" }}><Percent size={15} /></span>
-          <div><div className="ms-k">حاشیه سود ناخالص</div><div className="ms-v">{pct(23.4)} <small>+۱٫۲ واحد</small></div></div>
+          <div><div className="ms-k">حاشیه سود ناخالص</div><div className="ms-v">{pct(salesTotals.grossMarginPct)}</div></div>
         </div>
         <div className="mini-stat">
           <span className="ms-ic" style={{ color: "var(--warn)" }}><FileCheck2 size={15} /></span>
-          <div><div className="ms-k">اسناد ثبت‌شده</div><div className="ms-v">{faNum(4_268)} <small>از {faNum(totalVouchers)}</small></div></div>
+          <div><div className="ms-k">اسناد ثبت‌شده</div><div className="ms-v">{faNum(salesTotals.vouchers)} <small>از {faNum(totalVouchers)}</small></div></div>
         </div>
         <div className="mini-stat">
           <span className="ms-ic" style={{ color: "var(--success)" }}><Wallet size={15} /></span>
@@ -172,7 +173,7 @@ export default function Reports() {
             <div className="card inner" style={{ marginTop: 14 }}>
               <div className="card-hd">
                 <h3>ریز فروش ماهانه</h3>
-                <span className="small muted-2">۱۲ ماه منتهی به آبان ۱۴۰۵</span>
+                <span className="small muted-2">۱۲ ماه سال ۱۴۰۴</span>
               </div>
               <div className="tbl-wrap">
                 <table className="table table-compact">
@@ -339,7 +340,7 @@ export default function Reports() {
                 </div>
               </div>
               <div className="card inner">
-                <div className="card-hd"><h3>روند هفتگی ثبت</h3><span className="small muted-2">آبان ۱۴۰۵</span></div>
+                <div className="card-hd"><h3>روند هفتگی ثبت</h3><span className="small muted-2">سال ۱۴۰۴</span></div>
                 <div className="card-bd" style={{ paddingTop: 16 }}>
                   {weeklyDocs.map((w) => {
                     const total = w.posted + w.pending + w.error + w.draft;
@@ -374,7 +375,7 @@ export default function Reports() {
             </div>
 
             <div className="card inner" style={{ marginTop: 14 }}>
-              <div className="card-hd"><h3>اسناد ثبت‌شده به تفکیک شرکت</h3><span className="small muted-2">آبان ۱۴۰۵</span></div>
+              <div className="card-hd"><h3>اسناد ثبت‌شده به تفکیک شرکت</h3><span className="small muted-2">سال ۱۴۰۴</span></div>
               <div className="card-bd">
                 <HBarChart
                   data={[
@@ -476,7 +477,7 @@ export default function Reports() {
         </div>
         <div className="report-links">
           {[
-            { t: "تراز آزمایشی دوره آبان", s: "همه شرکت‌ها · ۱۴۰۵/۰۸/۳۰" },
+            { t: "تراز آزمایشی دوره ۱۴۰۴", s: "همه شرکت‌ها · ۱۴۰۵/۰۸/۳۰" },
             { t: "گزارش اسناد خطادار", s: "۱۴۶ سند · نیازمند اقدام" },
             { t: "صورت جریان نقدی", s: "تجمعی از ابتدای سال" },
             { t: "گزارش کیفیت داده هفتگی", s: "مقایسه با هفته گذشته" },

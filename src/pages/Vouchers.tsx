@@ -36,7 +36,7 @@ import {
 import { faNum, money, shortNum, toFaDigits } from "../lib/format";
 
 const statusOrder: VoucherStatus[] = ["posted", "pending", "error", "draft"];
-const typeOrder: VoucherType[] = ["فروش", "خرید", "دریافت", "پرداخت", "برگشت", "حقوق", "انبار", "سایر"];
+const typeOrder: VoucherType[] = ["عمومی", "سایر سیستم‌ها", "افتتاحیه", "اختتامیه", "بستن حساب‌ها", "تسعیر", "فروش", "خرید", "دریافت", "پرداخت", "برگشت", "حقوق", "انبار", "سایر"];
 
 const mappingMeta = {
   ok: { label: "نگاشت‌شده", tone: "success" as Tone },
@@ -74,7 +74,7 @@ export default function Vouchers() {
         (status === "all" || v.status === status) &&
         (company === "all" || v.company === company) &&
         (type === "all" || v.type === type) &&
-        (period === "all" || (period === "today" ? v.date === "۱۴۰۵/۰۸/۲۹" : v.date >= "۱۴۰۵/۰۸/۲۳"))
+        (period === "all" || (period === "today" ? v.date === "۱۴۰۴/۱۲/۲۹" : v.date >= "۱۴۰۵/۰۸/۲۳"))
       );
     });
   }, [rows, q, status, company, type, period]);
@@ -152,6 +152,12 @@ export default function Vouchers() {
 
   const hasFilter = q || status !== "all" || company !== "all" || type !== "all" || period !== "all";
 
+  const totalDocs = rows.length;
+  const postedDocs = rows.filter((v) => v.status === "posted").length;
+  const pendingDocs = rows.filter((v) => v.status === "pending").length;
+  const errorDocs = rows.filter((v) => v.status === "error").length;
+  const postedPct = totalDocs ? Math.round((postedDocs / totalDocs) * 1000) / 10 : 0;
+
   return (
     <>
       <div className="page-head">
@@ -178,19 +184,19 @@ export default function Vouchers() {
       <div className="mini-stats">
         <div className="mini-stat">
           <span className="ms-ic" style={{ color: "var(--indigo)" }}><ReceiptText size={15} /></span>
-          <div><div className="ms-k">اسناد دوره آبان</div><div className="ms-v">{faNum(5_574)} <small>سند</small></div></div>
+          <div><div className="ms-k">اسناد دوره ۱۴۰۴</div><div className="ms-v">{faNum(totalDocs)} <small>سند</small></div></div>
         </div>
         <div className="mini-stat">
           <span className="ms-ic" style={{ color: "var(--success)" }}><CircleCheck size={15} /></span>
-          <div><div className="ms-k">ثبت‌شده</div><div className="ms-v">{faNum(4_268)} <small>۷۶٫۶٪</small></div></div>
+          <div><div className="ms-k">ثبت‌شده</div><div className="ms-v">{faNum(postedDocs)} <small>{faNum(postedPct)}٪</small></div></div>
         </div>
         <div className="mini-stat">
           <span className="ms-ic" style={{ color: "var(--warn)" }}><Clock size={15} /></span>
-          <div><div className="ms-k">در انتظار ثبت</div><div className="ms-v">{faNum(812)} <small>سند</small></div></div>
+          <div><div className="ms-k">در انتظار ثبت</div><div className="ms-v">{faNum(pendingDocs)} <small>سند</small></div></div>
         </div>
         <div className="mini-stat">
           <span className="ms-ic" style={{ color: "var(--danger)" }}><AlertTriangle size={15} /></span>
-          <div><div className="ms-k">خطا در ثبت</div><div className="ms-v">{faNum(146)} <small>نیازمند بررسی</small></div></div>
+          <div><div className="ms-k">خطا در ثبت</div><div className="ms-v">{faNum(errorDocs)} <small>نیازمند بررسی</small></div></div>
         </div>
       </div>
 
@@ -218,9 +224,9 @@ export default function Vouchers() {
                 ))}
               </select>
               <select className="select" value={period} onChange={(e) => setPeriod(e.target.value)} aria-label="تاریخ">
-                <option value="all">کل دوره آبان</option>
-                <option value="today">امروز — ۲۹ آبان</option>
-                <option value="week">۷ روز گذشته</option>
+                <option value="all">کل دوره ۱۴۰۴</option>
+                <option value="today">اسفند ۱۴۰۴</option>
+                <option value="week">۷ روز آخر سال</option>
               </select>
               <select className="select" value={company} onChange={(e) => setCompany(e.target.value)} aria-label="شرکت">
                 <option value="all">همه شرکت‌ها</option>
@@ -235,7 +241,7 @@ export default function Vouchers() {
                   <FilterX size={12} /> پاک کردن
                 </button>
               ) : (
-                <span className="filter-label row"><CalendarDays size={11} /> دوره مالی: ۰۱ تا ۳۰ آبان ۱۴۰۵</span>
+                <span className="filter-label row"><CalendarDays size={11} /> دوره مالی: ۰۱/۰۱ تا ۱۲/۲۹ سال ۱۴۰۴</span>
               )}
             </div>
 
@@ -504,7 +510,7 @@ export default function Vouchers() {
                   </div>
                   <div className="write-meta">
                     <span>مقصد</span><b>سپیدار — شرکت پخش آرمان</b>
-                    <span>دوره</span><b>آبان ۱۴۰۵</b>
+                    <span>دوره</span><b>سال ۱۴۰۴</b>
                     <span>وضعیت نگاشت</span><b className="mint">همه حساب‌ها معتبر</b>
                   </div>
                 </div>

@@ -15,8 +15,8 @@ export default function Production() {
     <div className="page">
       <div className="page-head">
         <div>
-          <div className="ph-title"><h1>تولید</h1><Badge tone="mint" dot={false}>۳ خط فعال</Badge></div>
-          <p>سفارش تولید، برنامه هفتگی، کنترل کیفیت و توقفات خط — آبان ۱۴۰۵</p>
+          <div className="ph-title"><h1>تولید</h1><Badge tone="muted" dot={false}>بدون داده تولید</Badge></div>
+          <p>سفارش تولید، برنامه هفتگی، کنترل کیفیت و توقفات خط — سال ۱۴۰۴</p>
         </div>
         <div className="page-actions">
           <button className="btn btn-sm btn-primary" onClick={() => toast("سفارش تولید", "فرم ثبت سفارش جدید باز شد.", "info")}><Plus size={13} /> سفارش تولید</button>
@@ -25,10 +25,10 @@ export default function Production() {
 
       <div className="kpi-grid">
         {[
-          { label: "سفارش فعال", value: `${faNum(productionOrders.filter((o) => o.status !== "تکمیل").length)} سفارش`, hint: "خط ۱ و ۲ و ۳", c: "#2FE0BE", icon: ClipboardList },
-          { label: "تولید امروز", value: `${faNum(690)} عدد`, hint: "میانگین ۶۵۷ در هفته", c: "#7C8CFF", icon: Factory },
-          { label: "نرخ کیفیت", value: pct(97.2, 1), hint: "۱۴ مورد نایق", c: "#7BE495", icon: Gauge },
-          { label: "توقفات آبان", value: `${faNum(378)} دقیقه`, hint: "۴۵٪ خرابی دستگاه", c: "#F7B955", icon: Wrench },
+          { label: "سفارش فعال", value: `${faNum(productionOrders.filter((o) => o.status !== "تکمیل").length)} سفارش`, hint: `${faNum(productionOrders.length)} سفارش ثبت‌شده`, c: "#2FE0BE", icon: ClipboardList },
+          { label: "تولید امروز", value: "—", hint: "بدون داده تولید در سپیدار", c: "#7C8CFF", icon: Factory },
+          { label: "نرخ کیفیت", value: "—", hint: "بدون داده کیفیت", c: "#7BE495", icon: Gauge },
+          { label: "توقفات اسفند", value: "—", hint: "بدون داده توقف", c: "#F7B955", icon: Wrench },
         ].map((k) => {
           const Icon = k.icon;
           return (

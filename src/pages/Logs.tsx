@@ -255,7 +255,7 @@ export default function Logs() {
             {[
               { n: "system", c: 642, t: "خودکار" },
               { n: "scheduler", c: 318, t: "زمان‌بند" },
-              { n: "h.baghaei", c: 96, t: "کاربر" },
+              { n: "m.rostami", c: 96, t: "کاربر" },
               { n: "s.kazemi", c: 74, t: "کاربر" },
             ].map((a) => (
               <div className="kv" key={a.n}>

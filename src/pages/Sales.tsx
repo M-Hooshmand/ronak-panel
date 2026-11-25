@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { ShoppingBag, Users, ReceiptText, Wallet, Percent, Download, Plus } from "lucide-react";
 import { Badge, Tabs, Progress, useToast } from "../components/ui";
 import { faNum, shortNum, pct } from "../lib/format";
-import { customers, salesInvoices, aging, commission } from "../lib/business";
+import { customers, salesInvoices, aging, commission, salesTotals } from "../lib/business";
 
 export default function Sales() {
   const [params, setParams] = useSearchParams();
@@ -16,7 +16,7 @@ export default function Sales() {
       <div className="page-head">
         <div>
           <div className="ph-title"><h1>فروش و مشتریان</h1><Badge tone="mint" dot={false}>هدف ماه: ۸۵٪</Badge></div>
-          <p>مشتریان، فاکتورها، وصول مطالبات و پورسانت تیم فروش — آبان ۱۴۰۵</p>
+          <p>مشتریان، فاکتورها، وصول مطالبات و پورسانت تیم فروش — سال ۱۴۰۴</p>
         </div>
         <div className="page-actions">
           <button className="btn btn-sm"><Download size={13} /> خروجی</button>
@@ -26,10 +26,10 @@ export default function Sales() {
 
       <div className="kpi-grid">
         {[
-          { label: "فروش آبان", value: 9_840_000_000, icon: ShoppingBag, c: "#2FE0BE", hint: "+۱۰٫۳٪ نسبت به مهر" },
-          { label: "وصول‌شده", value: 7_240_000_000, icon: Wallet, c: "#7BE495", hint: "۷۴٪ از فروش" },
+          { label: "فروش اسفند ۱۴۰۴", value: salesTotals.esfand, icon: ShoppingBag, c: "#2FE0BE", hint: `${faNum(salesTotals.esfandCount)} فاکتور` },
+          { label: "وصول‌شده", value: salesTotals.receipts, icon: Wallet, c: "#7BE495", hint: `${faNum(salesTotals.receiptCount)} فیش دریافت` },
           { label: "مطالبات باز", value: totalAR, icon: ReceiptText, c: "#F7B955", hint: `${faNum(customers.length)} مشتری` },
-          { label: "پورسانت ماه", value: Math.round(commission.reduce((s, c) => s + (c.sold * c.rate) / 100, 0)), icon: Percent, c: "#7C8CFF", hint: "۳ کارشناس فروش" },
+          { label: "پورسانت ماه", value: Math.round(commission.reduce((s, c) => s + (c.sold * c.rate) / 100, 0)), icon: Percent, c: "#7C8CFF", hint: "بدون داده پرسنلی" },
         ].map((k) => {
           const Icon = k.icon;
           return (

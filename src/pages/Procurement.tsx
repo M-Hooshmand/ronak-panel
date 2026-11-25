@@ -15,8 +15,8 @@ export default function Procurement() {
     <div className="page">
       <div className="page-head">
         <div>
-          <div className="ph-title"><h1>تأمین و خرید</h1><Badge tone="warn" dot={false}>۲ درخواست در انتظار</Badge></div>
-          <p>تأمین‌کنندگان، درخواست خرید، سفارش خرید و رسید انبار — آبان ۱۴۰۵</p>
+          <div className="ph-title"><h1>تأمین و خرید</h1><Badge tone="muted" dot={false}>داده سپیدار — سال ۱۴۰۴</Badge></div>
+          <p>تأمین‌کنندگان، درخواست خرید، سفارش خرید و رسید انبار — سال ۱۴۰۴</p>
         </div>
         <div className="page-actions">
           <button className="btn btn-sm btn-primary" onClick={() => toast("درخواست خرید", "فرم درخواست خرید باز شد.", "info")}><Plus size={13} /> درخواست خرید</button>
@@ -25,10 +25,10 @@ export default function Procurement() {
 
       <div className="kpi-grid">
         {[
-          { label: "بدهی تأمین‌کنندگان", value: payable, icon: Truck, c: "#F7B955", hint: `${faNum(suppliers.length)} تأمین‌کننده` },
-          { label: "درخواست در انتظار", value: "۲", icon: ClipboardList, c: "#7C8CFF", hint: "تأیید مدیر مالی/عامل", raw: true },
-          { label: "سفارش باز", value: "۳", icon: ShoppingCart, c: "#2FE0BE", hint: "۱ مورد تأخیر تحویل", raw: true },
-          { label: "تحویل به‌موقع", value: pct(88, 0), icon: PackageCheck, c: "#7BE495", hint: "میانگین ۳ ماه", raw: true },
+          { label: "خرید از تأمین‌کنندگان", value: payable, icon: Truck, c: "#F7B955", hint: `${faNum(suppliers.length)} تأمین‌کننده` },
+          { label: "درخواست در انتظار", value: faNum(purchaseRequests.filter((r) => r.status === "در انتظار تأیید").length), icon: ClipboardList, c: "#7C8CFF", hint: "تأیید مدیر مالی/عامل", raw: true },
+          { label: "سفارش باز", value: faNum(purchaseOrders.filter((o) => o.status !== "دریافت‌شده").length), icon: ShoppingCart, c: "#2FE0BE", hint: `${faNum(purchaseOrders.length)} سفارش خرید ثبت‌شده`, raw: true },
+          { label: "رسید انبار", value: faNum(receipts.length), icon: PackageCheck, c: "#7BE495", hint: "پرداخت‌های ثبت‌شده سال ۱۴۰۴", raw: true },
         ].map((k) => {
           const Icon = k.icon;
           return (

@@ -18,12 +18,13 @@ const templates: Record<string, string> = {
 
 export default function Letters() {
   const [rows, setRows] = useState<HrLetter[]>(hrLetters);
-  const [sel, setSel] = useState<HrLetter>(hrLetters[0]);
+  const emptyLetter: HrLetter = { id: "", no: "—", date: "—", kind: "ابلاغ", empId: 0, subject: "—", size: "A4", status: "پیش‌نویس" };
+  const [sel, setSel] = useState<HrLetter>(hrLetters[0] ?? emptyLetter);
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const [form, setForm] = useState({ kind: "ابلاغ" as HrLetter["kind"], empId: 1, subject: "", size: "A4" as "A4" | "A5" });
   const toast = useToast();
-  const emp = employees.find((e) => e.id === sel.empId)!;
+  const emp = employees.find((e) => e.id === sel.empId);
 
   const printLetter = () => {
     const st = document.createElement("style");
@@ -37,7 +38,7 @@ export default function Letters() {
     const n: HrLetter = {
       id: `L-${600 + rows.length}`,
       no: `۱۴۰۵/${300 + rows.length}`,
-      date: "۱۴۰۵/۰۸/۲۹",
+      date: "۱۴۰۴/۱۲/۲۹",
       kind: form.kind,
       empId: form.empId,
       subject: form.subject || `نامه ${form.kind}`,
@@ -132,7 +133,7 @@ export default function Letters() {
                   </div>
                 </div>
                 <div className="ls-title">{sel.kind === "گواهی اشتغال" ? "گواهی اشتغال به کار" : `نامه ${sel.kind}`}</div>
-                <div className="ls-to">جناب آقای / سرکار خانم <b>{emp.name}</b><br /><span>{emp.role} — واحد {emp.dept}</span></div>
+                <div className="ls-to">جناب آقای / سرکار خانم <b>{emp?.name ?? "—"}</b><br /><span>{emp ? `${emp.role} — واحد ${emp.dept}` : "بدون پرونده پرسنلی"}</span></div>
                 <p className="ls-body">{templates[sel.kind]}</p>
                 <p className="ls-body">موضوع: {sel.subject}</p>
                 <div className="ls-sign">

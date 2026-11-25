@@ -13,7 +13,6 @@ import {
   Bell,
   Search,
   ChevronsUpDown,
-  Menu,
   Check,
   CircleHelp,
   LogOut,
@@ -164,7 +163,7 @@ function useClickOutside<T extends HTMLElement>(onOutside: () => void) {
 }
 
 /* -------------------------------- Sidebar -------------------------------- */
-function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+function Sidebar() {
   const loc = useLocation();
   const activeGroup = navGroups.find((g) => g.items.some((i) => samePath(i.to, loc.pathname)));
   const exact = activeGroup?.items.find((i) => matches(i.to, loc.pathname, loc.search));
@@ -176,7 +175,7 @@ function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
   }, [activeGroup?.id]);
 
   return (
-    <aside className={`sidebar ${isOpen ? "open" : ""}`}>
+    <aside className="sidebar">
       <div className="sb-brand">
         <Brand size={38} />
       </div>
@@ -201,12 +200,7 @@ function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
                     const Icon = item.icon;
                     const active = item.to === activeTo;
                     return (
-                      <NavLink
-                        key={item.to}
-                        to={item.to}
-                        onClick={onClose}
-                        className={() => `nav-item ${active ? "active" : ""}`}
-                      >
+                      <NavLink key={item.to} to={item.to} className={() => `nav-item ${active ? "active" : ""}`}>
                         <Icon size={16} strokeWidth={1.9} />
                         <span className="nav-label">{item.label}</span>
                         {item.badge && <span className={`nav-badge ${item.badgeTone ?? ""}`}>{item.badge}</span>}
@@ -243,7 +237,7 @@ function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
 }
 
 /* -------------------------------- Topbar -------------------------------- */
-function Topbar({ onMenu }: { onMenu: () => void }) {
+function Topbar() {
   const navigate = useNavigate();
   const toast = useToast();
   const [company, setCompany] = useState(companies[0]);
@@ -272,16 +266,13 @@ function Topbar({ onMenu }: { onMenu: () => void }) {
 
   return (
     <header className="topbar">
-      <button className="nav-toggle" aria-label="منو" onClick={onMenu}>
-        <Menu size={20} strokeWidth={2} />
-      </button>
       <div className="co-switch" ref={coRef}>
         <button className="co-btn" onClick={() => setCoOpen((v) => !v)} aria-expanded={coOpen}>
           <span className="co-avatar">{company.short.slice(0, 1)}</span>
           <span className="co-meta">
             <b>{company.name}</b>
             <span>
-              {toFaDigits(company.branches)} شعبه · دوره آبان ۱۴۰۵
+              {toFaDigits(company.branches)} شعبه · دوره سال ۱۴۰۴
             </span>
           </span>
           <ChevronsUpDown size={14} style={{ color: "var(--muted)" }} />
@@ -434,9 +425,9 @@ function Topbar({ onMenu }: { onMenu: () => void }) {
         <span className="topbar-divider" />
         <div style={{ position: "relative" }} ref={userRef}>
           <button className="user-btn" onClick={() => setUserOpen((v) => !v)} aria-expanded={userOpen}>
-            <span className="avatar">ح</span>
+            <span className="avatar">م</span>
             <span className="user-meta">
-              <b>حمیدرضا بقایی</b>
+              <b>مهدی رستمی</b>
               <span>مدیر سازمان</span>
             </span>
             <ChevronsUpDown size={13} style={{ color: "var(--muted)" }} />
@@ -445,10 +436,10 @@ function Topbar({ onMenu }: { onMenu: () => void }) {
             <div className="pop" style={{ minWidth: 230 }}>
               <div style={{ padding: "8px 9px 10px" }}>
                 <div className="row" style={{ marginBottom: 2 }}>
-                  <Avatar name="حمیدرضا بقایی" color="#2FE0BE" size={28} />
+                  <Avatar name="مهدی رستمی" color="#2FE0BE" size={28} />
                   <div>
-                    <b style={{ fontSize: 12, display: "block" }}>حمیدرضا بقایی</b>
-                    <span className="small muted-2">h.baghaei@arman.co</span>
+                    <b style={{ fontSize: 12, display: "block" }}>مهدی رستمی</b>
+                    <span className="small muted-2">m.rostami@arman.co</span>
                   </div>
                 </div>
                 <span className="badge badge-mint no-dot" style={{ marginTop: 6 }}>مدیر سازمان · آرمان</span>
@@ -486,12 +477,6 @@ function Topbar({ onMenu }: { onMenu: () => void }) {
 /* -------------------------------- Layout -------------------------------- */
 export default function Layout() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const [navOpen, setNavOpen] = useState(false);
-
-  useEffect(() => {
-    setNavOpen(false);
-  }, [location.pathname]);
 
   useEffect(() => {
     if (import.meta.env.DEV) return;
@@ -514,10 +499,9 @@ export default function Layout() {
 
   return (
     <div className="app">
-      <Sidebar isOpen={navOpen} onClose={() => setNavOpen(false)} />
-      {navOpen && <div className="sb-backdrop" onClick={() => setNavOpen(false)} />}
+      <Sidebar />
       <div className="main">
-        <Topbar onMenu={() => setNavOpen(true)} />
+        <Topbar />
         <main className="page">
           <Outlet />
         </main>

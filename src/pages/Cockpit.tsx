@@ -26,6 +26,7 @@ import {
   bounced,
   cashTrend,
   cashComposition,
+  checks,
   inventoryValue,
   belowReorder,
   pnl,
@@ -44,15 +45,15 @@ const kpis = [
     icon: Wallet,
     tone: "mint",
     delta: 4.2,
-    hint: "۵ حساب متصل",
+    hint: `${faNum(cashAccounts.length)} حساب متصل`,
   },
   {
-    label: "چک وصول‌شده — آبان",
+    label: "چک وصول‌شده — اسفند",
     value: clearedThisMonth,
     icon: ReceiptText,
     tone: "indigo",
     delta: 12.6,
-    hint: "۳ چک وصول‌شده",
+    hint: `${faNum(checks.filter((c) => c.status === "وصول‌شده").length)} چک وصول‌شده`,
   },
   {
     label: "چک در جریان",
@@ -60,7 +61,7 @@ const kpis = [
     icon: Clock3,
     tone: "warn",
     delta: 0,
-    hint: "۳ چک تا ۱۰ روز آینده",
+    hint: `${faNum(checks.filter((c) => c.status === "در جریان").length)} چک در جریان`,
     flat: true,
   },
   {
@@ -109,7 +110,7 @@ export default function Cockpit() {
             </Badge>
           </div>
           <p>
-            نقدینگی، چک‌ها، انبار، دارایی‌ها، سود و زیان و تعهدات مالی — آبان ۱۴۰۵
+            نقدینگی، چک‌ها، انبار، دارایی‌ها، سود و زیان و تعهدات مالی — سال ۱۴۰۴
           </p>
         </div>
         <div className="page-actions">
@@ -278,7 +279,7 @@ export default function Cockpit() {
           <div className="card-hd">
             <h3>
               <FileSpreadsheet size={15} /> خلاصه سود و زیان
-              <span className="ch-sub">آبان ۱۴۰۵ · تومان</span>
+              <span className="ch-sub">سال ۱۴۰۴ · تومان</span>
             </h3>
             <button className="btn btn-ghost btn-xs" onClick={() => navigate("/statements")}>
               صورت‌های مالی <ChevronLeft size={12} />
@@ -326,7 +327,7 @@ export default function Cockpit() {
           <div className="card-bd">
             <div className="mg-mini-grid">
               <div className="mg-mini">
-                <span className="small muted">حقوق آبان</span>
+                <span className="small muted">حقوق اسفند</span>
                 <b>{shortNum(payrollGross)}</b>
               </div>
               <div className="mg-mini">
@@ -353,7 +354,7 @@ export default function Cockpit() {
 
       <div className="mg-foot-note">
         <AlertTriangle size={13} />
-        همه اعداد از دیتابیس نرم‌افزار حسابداری استخراج، پاک‌سازی و در تاریخ ۱۴۰۵/۰۸/۲۹ همگام شده‌اند.
+        همه اعداد از دیتابیس نرم‌افزار حسابداری استخراج، پاک‌سازی و در تاریخ ۱۴۰۴/۱۲/۲۹ همگام شده‌اند.
         {bounced > 0 && <span className="danger"> · {shortNum(bounced)} تومان چک برگشتی نیاز به پیگیری دارد.</span>}
       </div>
     </div>

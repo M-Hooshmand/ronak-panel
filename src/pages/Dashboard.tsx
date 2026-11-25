@@ -21,24 +21,25 @@ import {
 } from "lucide-react";
 import { AreaChart, Donut, Sparkline, StackedBar } from "../components/charts";
 import { Badge, useToast, type Tone } from "../components/ui";
+import { salesTotals } from "../lib/business";
 import { recordTrend, vouchers, vouchersByStatus, qualityIssues, pipelines, activities, voucherTotal, voucherStatusMeta } from "../lib/data";
 import { faNum, money, shortNum, today, toFaDigits } from "../lib/format";
 
 const kpis = [
   {
-    label: "رکورد پردازش‌شده امروز",
-    value: 238_100,
-    unit: "رکورد",
+    label: "ردیف‌های دفتر کل",
+    value: salesTotals.lines,
+    unit: "ردیف",
     delta: 9.2,
     tone: "mint",
     icon: Activity,
     spark: [142, 156, 139, 171, 164, 129, 96, 183, 194, 202, 188, 215, 226, 238],
   },
   {
-    label: "اسناد ثبت‌شده امروز",
-    value: 1_248,
+    label: "اسناد ثبت‌شده",
+    value: salesTotals.vouchers,
     unit: "سند",
-    delta: 4.1,
+    delta: 100,
     tone: "indigo",
     icon: FileCheck2,
     spark: [820, 910, 870, 980, 1040, 730, 510, 1090, 1150, 1180, 1120, 1210, 1230, 1248],
@@ -104,7 +105,7 @@ export default function Dashboard() {
         </div>
         <div className="page-actions">
           <span className="chip">
-            <CalendarDays size={13} /> دوره مالی آبان ۱۴۰۵
+            <CalendarDays size={13} /> دوره مالی سال ۱۴۰۴
           </span>
           <div className="seg">
             {["امروز", "۷ روز", "۳۰ روز"].map((r) => (
@@ -162,7 +163,7 @@ export default function Dashboard() {
             <div className="hd-actions">
               <span className="chip small"><i className="dot live" style={{ background: "#2FE0BE" }} /> ۹۷٫۳٪ معتبر</span>
               <span className="chip small">میانگین {shortNum(178_400)}</span>
-              <span className="chip small">اوج {shortNum(238_100)}</span>
+              <span className="chip small">اوج {shortNum(Math.max(...recordTrend.map((r) => r.processed)))}</span>
             </div>
           </div>
           <div className="card-bd" style={{ paddingTop: 12 }}>
@@ -179,7 +180,7 @@ export default function Dashboard() {
           <div className="card-hd">
             <h3>
               <FileCheck2 size={15} /> اسناد به تفکیک وضعیت
-              <span className="ch-sub">آبان ۱۴۰۵</span>
+              <span className="ch-sub">سال ۱۴۰۴</span>
             </h3>
             <button className="btn btn-ghost btn-xs" onClick={() => navigate("/vouchers")}>
               مشاهده <ChevronLeft size={12} />
@@ -372,7 +373,7 @@ export default function Dashboard() {
         </div>
         <div className="card-foot">
           <span>
-            نمایش {toFaDigits(6)} سند از {faNum(1_412)} سند دوره — مجموع مبلغ {shortNum(5_842_000_000)} ریال
+            نمایش {toFaDigits(6)} سند از {faNum(salesTotals.vouchers)} سند دوره — {faNum(salesTotals.lines)} ردیف تفصیلی
           </span>
           <span className="row">
             <span className="dot live" /> به‌روزرسانی خودکار هر ۳۰ ثانیه

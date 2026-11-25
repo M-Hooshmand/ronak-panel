@@ -26,7 +26,7 @@ export default function Statements() {
             <h1>صورت‌های مالی</h1>
             <Badge tone="mint" dot={false}>ساخته‌شده از اسناد حسابداری</Badge>
           </div>
-          <p>سود و زیان، ترازنامه و جریان نقد — دوره آبان ۱۴۰۵ در مقایسه با مهر ۱۴۰۵</p>
+          <p>سود و زیان، ترازنامه و جریان نقد — دوره سال ۱۴۰۴ در مقایسه با سال ۱۴۰۳</p>
         </div>
         <div className="page-actions">
           <button className="btn btn-sm" onClick={() => toast("چاپ", "نسخه چاپی صورت‌های مالی آماده شد.", "info")}>
@@ -61,8 +61,8 @@ export default function Statements() {
               <thead>
                 <tr>
                   <th>شرح</th>
-                  <th>آبان ۱۴۰۵</th>
-                  <th>مهر ۱۴۰۵</th>
+                  <th>سال ۱۴۰۴</th>
+                  <th>سال ۱۴۰۳</th>
                   <th>تغییر</th>
                 </tr>
               </thead>

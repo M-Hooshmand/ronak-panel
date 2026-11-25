@@ -31,7 +31,7 @@ export default function Leaves() {
       <div className="kpi-grid">
         {[
           { label: "در انتظار تأیید", value: `${faNum(pending)} درخواست`, icon: Hourglass, c: "#F7B955" },
-          { label: "مرخصی استفاده‌شده — آبان", value: `${faNum(leaves.filter((l) => l.status === "تأییدشده" && l.kind !== "ماموریت").length + 18)} روز`, icon: CalendarClock, c: "#7C8CFF" },
+          { label: "مرخصی استفاده‌شده — اسفند", value: `${faNum(leaves.filter((l) => l.status === "تأییدشده" && l.kind !== "ماموریت").length + 18)} روز`, icon: CalendarClock, c: "#7C8CFF" },
           { label: "ماموریت فعال", value: `${faNum(leaves.filter((l) => l.kind === "ماموریت" && l.status === "تأییدشده").length)} مورد`, icon: Plane, c: "#2FE0BE" },
           { label: "مانده استحقاقی کل", value: `${faNum(leaveBalances.reduce((s, l) => s + l.remaining, 0))} روز`, icon: ClipboardCheck, c: "#7BE495" },
         ].map((k) => {

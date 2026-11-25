@@ -22,7 +22,7 @@ export default function HRDashboard() {
             <h1>منابع انسانی</h1>
             <Badge tone="mint" dot={false}>پرسنل، حضور، مرخصی، نامه‌ها</Badge>
           </div>
-          <p>تصویر کامل سرمایه انسانی — آبان ۱۴۰۵ · دستگاه ساعت‌زنی متصل</p>
+          <p>تصویر کامل سرمایه انسانی — سال ۱۴۰۴ · بدون داده پرسنلی در سپیدار</p>
         </div>
         <div className="page-actions">
           <button className="btn btn-sm" onClick={() => navigate("/hr/attendance")}>
@@ -39,10 +39,10 @@ export default function HRDashboard() {
 
       <div className="kpi-grid">
         {[
-          { label: "پرسنل فعال", value: "۶۷", hint: "۶ واحد سازمانی", icon: Users, tone: "mint" },
-          { label: "حاضر امروز", value: faNum(present + 24), hint: `${faNum(off + 1)} مرخصی/ماموریت`, icon: Sunrise, tone: "indigo" },
-          { label: "اضافه‌کاری آبان", value: `${faNum(Math.round(totalOt))} ساعت`, hint: "میانگین ۱۳٫۹ ساعت", icon: Timer, tone: "warn" },
-          { label: "تأخیر ماه", value: `${faNum(delaySum)} دقیقه`, hint: "۲ نفر بیش از ۳۰ دقیقه", icon: CalendarClock, tone: "danger" },
+          { label: "پرسنل فعال", value: faNum(employees.length), hint: `${faNum(departments.length)} واحد سازمانی`, icon: Users, tone: "mint" },
+          { label: "حاضر امروز", value: faNum(present), hint: `${faNum(off)} مرخصی/ماموریت`, icon: Sunrise, tone: "indigo" },
+          { label: "اضافه‌کاری اسفند", value: `${faNum(Math.round(totalOt))} ساعت`, hint: "بدون داده پرسنلی", icon: Timer, tone: "warn" },
+          { label: "تأخیر ماه", value: `${faNum(delaySum)} دقیقه`, hint: "بدون داده حضور", icon: CalendarClock, tone: "danger" },
         ].map((k) => {
           const Icon = k.icon;
           return (
@@ -65,7 +65,7 @@ export default function HRDashboard() {
           <div className="card-hd">
             <h3>
               <Fingerprint size={15} /> حضور و کارکرد امروز
-              <span className="ch-sub">۱۴۰۵/۰۸/۲۹</span>
+              <span className="ch-sub">۱۴۰۴/۱۲/۲۹</span>
             </h3>
             <button className="btn btn-ghost btn-xs" onClick={() => navigate("/hr/attendance")}>
               ریز کارکرد <ChevronLeft size={12} />

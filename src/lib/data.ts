@@ -2,6 +2,7 @@
    Mock data — Ronak ETL / data-quality / accounting bridge
    All names, amounts and statuses are internally consistent.
    ------------------------------------------------------------------ */
+import { ledgerVouchers } from "./sepidar.vouchers";
 
 export type Company = {
   id: string;
@@ -13,17 +14,11 @@ export type Company = {
 };
 
 export const companies: Company[] = [
-  { id: "arman", name: "شرکت پخش آرمان", short: "آرمان", industry: "توزیع و پخش کالا", branches: 4, plan: "سازمانی" },
-  { id: "pars", name: "گروه صنعتی پارس‌فولاد", short: "پارس‌فولاد", industry: "تولید فولاد", branches: 3, plan: "سازمانی" },
-  { id: "nikro", name: "بازرگانی نیک‌رو", short: "نیک‌رو", industry: "واردات و بازرگانی", branches: 2, plan: "حرفه‌ای" },
-  { id: "salamat", name: "داروسازی سلامت‌گستر", short: "سلامت‌گستر", industry: "صنایع دارویی", branches: 2, plan: "حرفه‌ای" },
+  { id: "tadbir", name: "شرکت تدبیر صنعت پلاست", short: "تدبیر", industry: "تولید فیلم و لفاف پلاستیکی", branches: 1, plan: "سپیدار ۶٫۱٫۹" },
 ];
 
 export const branches: Record<string, string[]> = {
-  arman: ["تهران — مرکز", "اصفهان", "مشهد", "شیراز"],
-  pars: ["اصفهان — کارخانه", "تهران — دفتر مرکزی", "اهواز"],
-  nikro: ["تهران — مرکز", "بندرعباس"],
-  salamat: ["تهران — کارخانه", "کرج"],
+  tadbir: ["اشتهارد — کارخانه"],
 };
 
 /* ------------------------------ Sources ------------------------------ */
@@ -258,7 +253,21 @@ export const qualityRules: QualityRule[] = [
 
 /* ----------------------------- Vouchers ----------------------------- */
 export type VoucherStatus = "posted" | "pending" | "error" | "draft";
-export type VoucherType = "فروش" | "خرید" | "دریافت" | "پرداخت" | "برگشت" | "حقوق" | "انبار" | "سایر";
+export type VoucherType =
+  | "فروش"
+  | "خرید"
+  | "دریافت"
+  | "پرداخت"
+  | "برگشت"
+  | "حقوق"
+  | "انبار"
+  | "سایر"
+  | "عمومی"
+  | "سایر سیستم‌ها"
+  | "بستن حساب‌ها"
+  | "اختتامیه"
+  | "افتتاحیه"
+  | "تسعیر";
 
 export type VoucherLine = {
   code: string;
@@ -286,131 +295,7 @@ export type Voucher = {
   reference?: string;
 };
 
-const ACC = {
-  cash: { code: "۱۰۱۰۱", account: "صندوق" },
-  bank: { code: "۱۰۲۰۲", account: "بانک ملت — جاری ۱۲۳۴۵۶۷" },
-  ar: { code: "۱۰۳۰۱", account: "حساب‌های دریافتنی" },
-  inventory: { code: "۱۰۴۰۱", account: "موجودی کالا" },
-  ap: { code: "۲۰۱۰۱", account: "حساب‌های پرداختنی" },
-  vat: { code: "۲۰۳۰۱", account: "مالیات بر ارزش افزوده" },
-  sales: { code: "۴۰۱۰۱", account: "فروش" },
-  salesReturn: { code: "۴۰۲۰۱", account: "برگشت از فروش" },
-  cogs: { code: "۵۰۱۰۱", account: "بهای تمام‌شده کالای فروش‌رفته" },
-  freight: { code: "۶۰۱۰۱", account: "هزینه حمل و نقل" },
-  salary: { code: "۶۰۲۰۱", account: "هزینه حقوق و دستمزد" },
-  tax: { code: "۲۰۳۰۵", account: "مالیات پرداختنی" },
-};
-
-const L = (acc: { code: string; account: string }, debit: number, credit: number, costCenter?: string): VoucherLine => ({
-  code: acc.code,
-  account: acc.account,
-  debit,
-  credit,
-  costCenter,
-});
-
-export const vouchers: Voucher[] = [
-  {
-    id: "V-001", number: "۱۴۰۵-۰۸۲۹-۰۰۱", date: "۱۴۰۵/۰۸/۲۹", type: "فروش", status: "posted",
-    description: "فروش نقدی و اعتباری شعبه تهران — دوره روزانه",
-    company: "شرکت پخش آرمان", branch: "تهران — مرکز", source: "پایپلاین فروش روزانه",
-    destinationNo: "سپیدار / ۸۴۲۱۱۹", postedAt: "امروز ۰۳:۲۲", createdBy: "سیستم — خودکار", reference: "INV-۱۴۰۵-۱۱۹۸۴",
-    lines: [L(ACC.ar, 1_320_000_000, 0, "فروش تهران"), L(ACC.sales, 0, 1_200_000_000, "فروش تهران"), L(ACC.vat, 0, 120_000_000)],
-  },
-  {
-    id: "V-002", number: "۱۴۰۵-۰۸۲۹-۰۰۲", date: "۱۴۰۵/۰۸/۲۹", type: "خرید", status: "posted",
-    description: "خرید کالا از تأمین‌کننده — فاکتور ۴۵۲۱",
-    company: "شرکت پخش آرمان", branch: "تهران — مرکز", source: "پایپلاین اسناد خرید",
-    destinationNo: "سپیدار / ۸۴۲۱۲۰", postedAt: "امروز ۰۳:۵۱", createdBy: "سیستم — خودکار", reference: "PUR-۴۵۲۱",
-    lines: [L(ACC.inventory, 850_000_000, 0, "انبار مرکزی"), L(ACC.vat, 85_000_000, 0), L(ACC.ap, 0, 935_000_000)],
-  },
-  {
-    id: "V-003", number: "۱۴۰۵-۰۸۲۹-۰۰۳", date: "۱۴۰۵/۰۸/۲۹", type: "دریافت", status: "posted",
-    description: "وصول مطالبات مشتریان — حواله‌های بانکی",
-    company: "شرکت پخش آرمان", branch: "تهران — مرکز", source: "پایپلاین دریافتنی",
-    destinationNo: "سپیدار / ۸۴۲۱۲۴", postedAt: "امروز ۰۵:۰۸", createdBy: "حمیدرضا بقایی", reference: "RCV-۹۹۱۲",
-    lines: [L(ACC.bank, 480_000_000, 0), L(ACC.ar, 0, 480_000_000, "مشتریان تهران")],
-  },
-  {
-    id: "V-004", number: "۱۴۰۵-۰۸۲۹-۰۰۴", date: "۱۴۰۵/۰۸/۲۹", type: "پرداخت", status: "pending",
-    description: "پرداخت به تأمین‌کنندگان — دسته حواله ۱۸",
-    company: "شرکت پخش آرمان", branch: "اصفهان", source: "پایپلاین پرداخت",
-    createdBy: "سیستم — خودکار", reference: "PAY-۱۸۰۲",
-    lines: [L(ACC.ap, 310_000_000, 0, "تأمین‌کنندگان"), L(ACC.bank, 0, 310_000_000)],
-  },
-  {
-    id: "V-005", number: "۱۴۰۵-۰۸۲۸-۰۱۱", date: "۱۴۰۵/۰۸/۲۸", type: "سایر", status: "posted",
-    description: "هزینه حمل و نقل محموله‌های اصفهان",
-    company: "شرکت پخش آرمان", branch: "اصفهان", source: "پایپلاین اسناد خرید",
-    destinationNo: "سپیدار / ۸۴۱۹۸۸", postedAt: "۲۸ آبان ۰۴:۰۲", createdBy: "سیستم — خودکار", reference: "FRT-۷۷۲",
-    lines: [L(ACC.freight, 45_000_000, 0, "توزیع اصفهان"), L(ACC.vat, 4_500_000, 0), L(ACC.cash, 0, 49_500_000)],
-  },
-  {
-    id: "V-006", number: "۱۴۰۵-۰۸۲۸-۰۱۲", date: "۱۴۰۵/۰۸/۲۸", type: "برگشت", status: "error",
-    description: "برگشت از فروش — مرجوعی مشتری ۱۰۴۲",
-    company: "بازرگانی نیک‌رو", branch: "تهران — مرکز", source: "پایپلاین فروش روزانه",
-    createdBy: "سیستم — خودکار", reference: "RTR-۱۰۴۲",
-    error: "کد حساب ۱۰۹۹۹ در نرم‌افزار مقصد یافت نشد. نگاشت حساب را تکمیل کنید.",
-    lines: [L(ACC.salesReturn, 62_000_000, 0, "مرجوعی"), L(ACC.vat, 6_200_000, 0), L(ACC.ar, 0, 68_200_000, "مشتری ۱۰۴۲")],
-  },
-  {
-    id: "V-007", number: "۱۴۰۵-۰۸۲۷-۰۰۵", date: "۱۴۰۵/۰۸/۲۷", type: "حقوق", status: "pending",
-    description: "حقوق و دستمزد مهر ۱۴۰۵ — کارکنان ستاد",
-    company: "گروه صنعتی پارس‌فولاد", branch: "تهران — دفتر مرکزی", source: "پایپلاین حقوق و دستمزد",
-    createdBy: "سارا کاظمی", reference: "PR-۱۴۰۵۰۷",
-    lines: [L(ACC.salary, 920_000_000, 0, "ستاد"), L(ACC.bank, 0, 920_000_000)],
-  },
-  {
-    id: "V-008", number: "۱۴۰۵-۰۸۲۷-۰۰۶", date: "۱۴۰۵/۰۸/۲۷", type: "فروش", status: "posted",
-    description: "فروش اعتباری شعبه اصفهان — دوره هفتگی",
-    company: "شرکت پخش آرمان", branch: "اصفهان", source: "پایپلاین فروش روزانه",
-    destinationNo: "سپیدار / ۸۴۱۹۰۲", postedAt: "۲۷ آبان ۰۳:۱۹", createdBy: "سیستم — خودکار", reference: "INV-۱۴۰۵-۱۱۸۷۰",
-    lines: [L(ACC.ar, 286_000_000, 0, "فروش اصفهان"), L(ACC.sales, 0, 260_000_000, "فروش اصفهان"), L(ACC.vat, 0, 26_000_000)],
-  },
-  {
-    id: "V-009", number: "۱۴۰۵-۰۸۲۷-۰۰۷", date: "۱۴۰۵/۰۸/۲۷", type: "خرید", status: "draft",
-    description: "خرید مواد اولیه — قرارداد سالانه فولاد",
-    company: "گروه صنعتی پارس‌فولاد", branch: "اصفهان — کارخانه", source: "پایپلاین اسناد خرید",
-    createdBy: "امیر توکلی", reference: "PO-۸۸۴۱",
-    lines: [L(ACC.inventory, 1_450_000_000, 0, "مواد اولیه"), L(ACC.vat, 145_000_000, 0), L(ACC.ap, 0, 1_595_000_000)],
-  },
-  {
-    id: "V-010", number: "۱۴۰۵-۰۸۲۶-۰۰۹", date: "۱۴۰۵/۰۸/۲۶", type: "دریافت", status: "posted",
-    description: "واریز نقدی به بانک — صندوق مرکزی",
-    company: "شرکت پخش آرمان", branch: "تهران — مرکز", source: "پایپلاین دریافتنی",
-    destinationNo: "سپیدار / ۸۴۱۸۶۰", postedAt: "۲۶ آبان ۱۷:۴۴", createdBy: "حمیدرضا بقایی", reference: "DEP-۵۵۰۱",
-    lines: [L(ACC.bank, 120_000_000, 0), L(ACC.cash, 0, 120_000_000)],
-  },
-  {
-    id: "V-011", number: "۱۴۰۵-۰۸۲۶-۰۱۰", date: "۱۴۰۵/۰۸/۲۶", type: "فروش", status: "error",
-    description: "فروش اعتباری بازرگانی — مشتری حقوقی ۸۸۲",
-    company: "بازرگانی نیک‌رو", branch: "تهران — مرکز", source: "پایپلاین فروش روزانه",
-    createdBy: "سیستم — خودکار", reference: "INV-۱۴۰۵-۱۱۳۲",
-    error: "مرکز هزینه «فروش شمال» در مقصد تعریف نشده است؛ ۳ ردیف نگاشت نشد.",
-    lines: [L(ACC.ar, 748_000_000, 0, "مشتری ۸۸۲"), L(ACC.sales, 0, 680_000_000, "فروش شمال"), L(ACC.vat, 0, 68_000_000)],
-  },
-  {
-    id: "V-012", number: "۱۴۰۵-۰۸۲۵-۰۰۲", date: "۱۴۰۵/۰۸/۲۵", type: "پرداخت", status: "posted",
-    description: "پرداخت مالیات بر ارزش افزوده دوره مهر",
-    company: "گروه صنعتی پارس‌فولاد", branch: "اصفهان — کارخانه", source: "پایپلاین پرداخت",
-    destinationNo: "سپیدار / ۸۴۱۷۷۴", postedAt: "۲۵ آبان ۱۱:۰۳", createdBy: "سارا کاظمی", reference: "TAX-۱۴۰۵۰۷",
-    lines: [L(ACC.tax, 95_000_000, 0), L(ACC.bank, 0, 95_000_000)],
-  },
-  {
-    id: "V-013", number: "۱۴۰۵-۰۸۲۵-۰۰۳", date: "۱۴۰۵/۰۸/۲۵", type: "انبار", status: "draft",
-    description: "انبارگردانی پایان دوره — تعدیل موجودی",
-    company: "شرکت پخش آرمان", branch: "مشهد", source: "پایپلاین موجودی",
-    createdBy: "سیستم — خودکار", reference: "STK-۴۲۱",
-    lines: [L(ACC.inventory, 38_000_000, 0, "انبار مشهد"), L(ACC.cogs, 0, 38_000_000)],
-  },
-  {
-    id: "V-014", number: "۱۴۰۵-۰۸۲۴-۰۰۱", date: "۱۴۰۵/۰۸/۲۴", type: "فروش", status: "posted",
-    description: "فروش صادراتی — محموله بندرعباس",
-    company: "بازرگانی نیک‌رو", branch: "بندرعباس", source: "پایپلاین فروش روزانه",
-    destinationNo: "هلو / ۴۴۱۲۰۹", postedAt: "۲۴ آبان ۰۹:۳۰", createdBy: "سیستم — خودکار", reference: "EXP-۲۲۱۰",
-    lines: [L(ACC.ar, 1_060_000_000, 0, "صادرات"), L(ACC.sales, 0, 1_060_000_000, "صادرات")],
-  },
-];
+export const vouchers: Voucher[] = ledgerVouchers;
 
 export const voucherStatusMeta: Record<VoucherStatus, { label: string; tone: string }> = {
   posted: { label: "ثبت‌شده", tone: "success" },
@@ -420,67 +305,85 @@ export const voucherStatusMeta: Record<VoucherStatus, { label: string; tone: str
 };
 
 export const accountMapping = [
-  { srcCode: "۱۰۱۰۱", srcName: "صندوق", dstCode: "۱۱۰۱", dstName: "صندوق", confidence: 100, status: "ok" },
-  { srcCode: "۱۰۲۰۲", srcName: "بانک ملت", dstCode: "۱۱۰۲", dstName: "بانک ملت — جاری", confidence: 100, status: "ok" },
-  { srcCode: "۱۰۳۰۱", srcName: "حساب‌های دریافتنی", dstCode: "۱۲۰۱", dstName: "حساب‌های دریافتنی تجاری", confidence: 98, status: "ok" },
-  { srcCode: "۱۰۴۰۱", srcName: "موجودی کالا", dstCode: "۱۳۰۱", dstName: "موجودی کالای آماده", confidence: 96, status: "ok" },
-  { srcCode: "۲۰۱۰۱", srcName: "حساب‌های پرداختنی", dstCode: "۲۱۰۱", dstName: "حساب‌های پرداختنی تجاری", confidence: 97, status: "ok" },
-  { srcCode: "۲۰۳۰۱", srcName: "مالیات بر ارزش افزوده", dstCode: "۲۲۰۱", dstName: "مالیات ارزش افزوده پرداختنی", confidence: 100, status: "ok" },
-  { srcCode: "۴۰۱۰۱", srcName: "فروش", dstCode: "۴۱۰۱", dstName: "درآمد فروش داخلی", confidence: 99, status: "ok" },
-  { srcCode: "۴۰۲۰۱", srcName: "برگشت از فروش", dstCode: "۴۱۰۵", dstName: "برگشت از فروش", confidence: 91, status: "review" },
-  { srcCode: "۵۰۱۰۱", srcName: "بهای تمام‌شده کالای فروش‌رفته", dstCode: "۵۱۰۱", dstName: "بهای تمام‌شده کالای فروش‌رفته", confidence: 100, status: "ok" },
-  { srcCode: "۶۰۱۰۱", srcName: "هزینه حمل و نقل", dstCode: "۶۲۰۳", dstName: "هزینه حمل و توزیع", confidence: 88, status: "review" },
-  { srcCode: "۶۰۲۰۱", srcName: "هزینه حقوق و دستمزد", dstCode: "۶۱۰۱", dstName: "هزینه حقوق و دستمزد", confidence: 95, status: "ok" },
-  { srcCode: "۱۰۹۹۹", srcName: "حساب نامشخص", dstCode: "—", dstName: "تعریف نشده", confidence: 0, status: "missing" },
+  { srcCode: "01", srcName: "حسابهاي دريافتني", dstCode: "0-11-12-01", dstName: "حسابهاي دريافتني", confidence: 100, status: "ok" },
+  { srcCode: "05", srcName: "موجودي بانكهاي ريالي", dstCode: "0-11-10-05", dstName: "موجودي بانكهاي ريالي", confidence: 100, status: "ok" },
+  { srcCode: "01", srcName: "حسابهاي پرداختني", dstCode: "0-21-10-01", dstName: "حسابهاي پرداختني", confidence: 100, status: "ok" },
+  { srcCode: "01", srcName: "موجودي  انبار مواد اوليه", dstCode: "0-11-15-01", dstName: "موجودي  انبار مواد اوليه", confidence: 100, status: "ok" },
+  { srcCode: "01", srcName: "فروش  داخلي محصولات", dstCode: "0-41-10-01", dstName: "فروش  داخلي محصولات", confidence: 100, status: "ok" },
+  { srcCode: "01", srcName: "بهاي تمام‌شده كالاي فروش رفته داخلي محصولات", dstCode: "0-51-10-01", dstName: "بهاي تمام‌شده كالاي فروش رفته داخلي محصولات", confidence: 100, status: "ok" },
+  { srcCode: "02", srcName: "چكهاي دريافتني نزد صندوق", dstCode: "0-11-12-02", dstName: "چكهاي دريافتني نزد صندوق", confidence: 100, status: "ok" },
+  { srcCode: "01", srcName: "پيش دريافت فروش محصولات", dstCode: "0-21-13-01", dstName: "پيش دريافت فروش محصولات", confidence: 100, status: "ok" },
+  { srcCode: "12", srcName: "ماليات ارزش افزوده پرداختي", dstCode: "0-21-11-12", dstName: "ماليات ارزش افزوده پرداختي", confidence: 100, status: "ok" },
+  { srcCode: "12", srcName: "ماليات بر ارزش افزوده دريافتني", dstCode: "0-11-13-12", dstName: "ماليات بر ارزش افزوده دريافتني", confidence: 100, status: "ok" },
+  { srcCode: "01", srcName: "جاري شركا", dstCode: "0-21-15-01", dstName: "جاري شركا", confidence: 100, status: "ok" },
+  { srcCode: "01", srcName: "سود (زيان ) انباشته", dstCode: "0-31-12-01", dstName: "سود (زيان ) انباشته", confidence: 100, status: "ok" },
+  { srcCode: "01", srcName: "زمين", dstCode: "0-12-10-01", dstName: "زمين", confidence: 100, status: "ok" },
+  { srcCode: "02", srcName: "ساختمانها", dstCode: "0-12-10-02", dstName: "ساختمانها", confidence: 100, status: "ok" },
+  { srcCode: "07", srcName: "حقوق ودستمزد پرداختني", dstCode: "0-21-11-07", dstName: "حقوق ودستمزد پرداختني", confidence: 100, status: "ok" },
+  { srcCode: "01", srcName: "پيش پرداخت خريد موجودي ها", dstCode: "0-11-18-01", dstName: "پيش پرداخت خريد موجودي ها", confidence: 100, status: "ok" },
+  { srcCode: "04", srcName: "ماشين آلات و تجهيزات توليد", dstCode: "0-12-10-04", dstName: "ماشين آلات و تجهيزات توليد", confidence: 100, status: "ok" },
+  { srcCode: "02", srcName: "تعديلات سنواتي", dstCode: "0-31-12-02", dstName: "تعديلات سنواتي", confidence: 100, status: "ok" },
+  { srcCode: "01", srcName: "حقوق پايه", dstCode: "0-61-10-01", dstName: "حقوق پايه", confidence: 100, status: "ok" },
+  { srcCode: "04", srcName: "سازمان تامين اجتماعي – حق بيمه پرداختني كاركنان", dstCode: "0-21-11-04", dstName: "سازمان تامين اجتماعي – حق بيمه پرداختني كاركنان", confidence: 100, status: "ok" },
+  { srcCode: "01", srcName: "ماليات برعملكرد", dstCode: "0-21-14-01", dstName: "ماليات برعملكرد", confidence: 100, status: "ok" },
+  { srcCode: "30", srcName: "هزينه هاي حمل و انبارداري", dstCode: "0-61-12-30", dstName: "هزينه هاي حمل و انبارداري", confidence: 100, status: "ok" },
+  { srcCode: "14", srcName: "ساير حسابهاي پرداختني", dstCode: "0-21-11-14", dstName: "ساير حسابهاي پرداختني", confidence: 100, status: "ok" },
+  { srcCode: "03", srcName: "تاسيسات", dstCode: "0-12-10-03", dstName: "تاسيسات", confidence: 100, status: "ok" },
+  { srcCode: "11", srcName: "بيمه سهم كارفرما", dstCode: "0-61-10-11", dstName: "بيمه سهم كارفرما", confidence: 100, status: "ok" },
+  { srcCode: "02", srcName: "هزينه مزايا ماهانه", dstCode: "0-61-10-02", dstName: "هزينه مزايا ماهانه", confidence: 100, status: "ok" },
+  { srcCode: "01", srcName: "سرمايه", dstCode: "0-31-10-01", dstName: "سرمايه", confidence: 100, status: "ok" },
+  { srcCode: "01", srcName: "برگشت از فروش  داخلي محصولات", dstCode: "0-41-11-01", dstName: "برگشت از فروش  داخلي محصولات", confidence: 100, status: "ok" },
 ];
 
 /* ------------------------------ Reports ------------------------------ */
 export const salesTrend = [
-  { month: "آذر", value: 4_820, records: 118_400 },
-  { month: "دی", value: 5_140, records: 124_900 },
-  { month: "بهمن", value: 5_460, records: 131_200 },
-  { month: "اسفند", value: 6_980, records: 168_700 },
-  { month: "فروردین", value: 4_120, records: 96_300 },
-  { month: "اردیبهشت", value: 4_760, records: 112_800 },
-  { month: "خرداد", value: 5_280, records: 126_500 },
-  { month: "تیر", value: 5_640, records: 134_100 },
-  { month: "مرداد", value: 5_180, records: 128_600 },
-  { month: "شهریور", value: 6_120, records: 148_200 },
-  { month: "مهر", value: 6_540, records: 158_900 },
-  { month: "آبان", value: 7_240, records: 176_400 },
+  { month: "فروردین", value: 0, records: 0 },
+  { month: "اردیبهشت", value: 11836, records: 39 },
+  { month: "خرداد", value: 6256, records: 18 },
+  { month: "تیر", value: 5716, records: 12 },
+  { month: "مرداد", value: 6380, records: 9 },
+  { month: "شهریور", value: 10166, records: 29 },
+  { month: "مهر", value: 9663, records: 27 },
+  { month: "آبان", value: 7246, records: 25 },
+  { month: "آذر", value: 7507, records: 15 },
+  { month: "دی", value: 0, records: 0 },
+  { month: "بهمن", value: 12299, records: 28 },
+  { month: "اسفند", value: 7160, records: 21 },
 ];
 
 export const balanceSheet = [
-  { label: "دارایی جاری", assets: 52_400, liabilities: 0, equity: 0 },
-  { label: "دارایی ثابت", assets: 31_800, liabilities: 0, equity: 0 },
-  { label: "بدهی جاری", assets: 0, liabilities: 24_600, equity: 0 },
-  { label: "بدهی بلندمدت", assets: 0, liabilities: 12_400, equity: 0 },
-  { label: "سرمایه", assets: 0, liabilities: 0, equity: 38_200 },
-  { label: "سود انباشته", assets: 0, liabilities: 0, equity: 9_000 },
+  { label: "دارایی جاری", assets: 18585, liabilities: 0, equity: 0 },
+  { label: "دارایی ثابت", assets: 21149, liabilities: 0, equity: 0 },
+  { label: "بدهی جاری", assets: 0, liabilities: 29002, equity: 0 },
+  { label: "بدهی بلندمدت", assets: 0, liabilities: 0, equity: 0 },
+  { label: "سرمایه", assets: 0, liabilities: 0, equity: 0 },
+  { label: "اندوخته قانونی", assets: 0, liabilities: 0, equity: 0 },
+  { label: "سود انباشته", assets: 0, liabilities: 0, equity: 0 },
+  { label: "سود دوره جاری", assets: 0, liabilities: 0, equity: 4206 },
 ];
 
 export const recordTrend = [
-  { day: "۱۶ آبان", processed: 142_800, valid: 139_100 },
-  { day: "۱۷ آبان", processed: 156_200, valid: 151_400 },
-  { day: "۱۸ آبان", processed: 138_600, valid: 134_800 },
-  { day: "۱۹ آبان", processed: 171_400, valid: 166_900 },
-  { day: "۲۰ آبان", processed: 164_200, valid: 159_700 },
-  { day: "۲۱ آبان", processed: 128_900, valid: 125_600 },
-  { day: "۲۲ آبان", processed: 96_400, valid: 94_800 },
-  { day: "۲۳ آبان", processed: 182_600, valid: 177_300 },
-  { day: "۲۴ آبان", processed: 194_200, valid: 188_900 },
-  { day: "۲۵ آبان", processed: 201_800, valid: 196_400 },
-  { day: "۲۶ آبان", processed: 188_400, valid: 183_100 },
-  { day: "۲۷ آبان", processed: 214_900, valid: 209_200 },
-  { day: "۲۸ آبان", processed: 226_300, valid: 220_800 },
-  { day: "۲۹ آبان", processed: 238_100, valid: 231_600 },
+  { day: "14 اسفند", processed: 3, valid: 3 },
+  { day: "15 اسفند", processed: 5, valid: 5 },
+  { day: "17 اسفند", processed: 17, valid: 17 },
+  { day: "18 اسفند", processed: 17, valid: 17 },
+  { day: "19 اسفند", processed: 14, valid: 14 },
+  { day: "20 اسفند", processed: 8, valid: 8 },
+  { day: "22 اسفند", processed: 2, valid: 2 },
+  { day: "23 اسفند", processed: 9, valid: 9 },
+  { day: "24 اسفند", processed: 21, valid: 21 },
+  { day: "25 اسفند", processed: 16, valid: 16 },
+  { day: "26 اسفند", processed: 74, valid: 74 },
+  { day: "27 اسفند", processed: 34, valid: 34 },
+  { day: "28 اسفند", processed: 94, valid: 94 },
+  { day: "29 اسفند", processed: 52, valid: 52 },
 ];
 
 export const vouchersByStatus = [
-  { label: "ثبت‌شده", value: 4268, color: "#7BE495" },
-  { label: "در انتظار", value: 812, color: "#F7B955" },
-  { label: "خطا", value: 146, color: "#FF6B81" },
-  { label: "پیش‌نویس", value: 348, color: "#8A9BB4" },
+  { label: "ثبت‌شده", value: 2893, color: "#7BE495" },
+  { label: "در انتظار", value: 0, color: "#F7B955" },
+  { label: "خطا", value: 0, color: "#FF6B81" },
+  { label: "پیش‌نویس", value: 0, color: "#8A9BB4" },
 ];
 
 export const agentPerformance = [
@@ -511,7 +414,7 @@ export const logs: LogEntry[] = [
   { id: "L-9818", ts: "۱۴۰۵/۰۸/۲۹ ۱۱:۱۵:۳۳", level: "error", source: "voucher-service", message: "ثبت سند ۱۴۰۵-۰۸۲۸-۰۱۲ ناموفق: کد حساب ۱۰۹۹۹ در مقصد یافت نشد", actor: "system", ip: "10.0.3.21" },
   { id: "L-9817", ts: "۱۴۰۵/۰۸/۲۹ ۱۰:۵۲:۱۹", level: "info", source: "pipeline-runner", message: "پایپلاین «فروش روزانه ← دفتر کل» با ۱۸۴٬۴۲۰ رکورد تکمیل شد", actor: "scheduler", ip: "10.0.3.10" },
   { id: "L-9816", ts: "۱۴۰۵/۰۸/۲۹ ۱۰:۳۱:۰۰", level: "warn", source: "mapping-engine", message: "نگاشت حساب ۶۰۱۰۱ با اطمینان ۸۸٪ نیازمند بازبینی دستی است", actor: "mapping-engine", ip: "10.0.3.18" },
-  { id: "L-9815", ts: "۱۴۰۵/۰۸/۲۹ ۱۰:۰۲:۴۴", level: "info", source: "auth", message: "ورود موفق کاربر h.baghaei از مرورگر Chrome / Windows", actor: "h.baghaei", ip: "185.55.12.9" },
+  { id: "L-9815", ts: "۱۴۰۵/۰۸/۲۹ ۱۰:۰۲:۴۴", level: "info", source: "auth", message: "ورود موفق کاربر m.rostami از مرورگر Chrome / Windows", actor: "m.rostami", ip: "185.55.12.9" },
   { id: "L-9814", ts: "۱۴۰۵/۰۸/۲۹ ۰۹:۴۸:۱۲", level: "info", source: "agent-gateway", message: "توکن ایجنت RONAK-AG-02 با موفقیت چرخش یافت", actor: "system", ip: "10.20.4.18" },
   { id: "L-9813", ts: "۱۴۰۵/۰۸/۲۹ ۰۹:۳۰:۰۱", level: "info", source: "connector", message: "اتصال TLS به 10.31.0.7:1521 برقرار شد (TLS 1.3, AES-256-GCM)", actor: "agent", ip: "10.31.0.7" },
   { id: "L-9812", ts: "۱۴۰۵/۰۸/۲۹ ۰۸:۵۹:۵۷", level: "warn", source: "connector", message: "کندی پاسخ‌دهی منبع «فروش مشهد» (۲.۸ ثانیه) — تلاش مجدد انجام شد", actor: "agent", ip: "10.20.6.24" },
@@ -559,11 +462,9 @@ export const roles = [
 ];
 
 export const teamMembers = [
-  { name: "حمیدرضا بقایی", email: "h.baghaei@arman.co", role: "مدیر سازمان", last: "آنلاین", initials: "ح", color: "#2FE0BE" },
-  { name: "سارا کاظمی", email: "s.kazemi@pars.co", role: "حسابدار ارشد", last: "۱۲ دقیقه پیش", initials: "س", color: "#7C8CFF" },
-  { name: "امیر توکلی", email: "a.tavakoli@arman.co", role: "تحلیلگر داده", last: "۱ ساعت پیش", initials: "ا", color: "#F7B955" },
-  { name: "نگار شریفی", email: "n.sharifi@nikro.co", role: "پشتیبانی فنی", last: "دیروز", initials: "ن", color: "#FF6B81" },
-  { name: "حسین مرادی", email: "h.moradi@salamat.co", role: "حسابدار ارشد", last: "۲ روز پیش", initials: "ح", color: "#7BE495" },
+  { name: "سرپرست", email: "Admin@spidar.local", role: "مدیر سیستم", last: "—", initials: "س", color: "#2FE0BE" },
+  { name: "مهرداد آريا", email: "آريا@spidar.local", role: "حسابدار", last: "—", initials: "م", color: "#7C8CFF" },
+  { name: "baghaei", email: "baghaei@spidar.local", role: "کاربر", last: "—", initials: "b", color: "#F7B955" },
 ];
 
 /* ------------------------------ Helpers ------------------------------ */

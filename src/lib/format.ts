@@ -70,4 +70,4 @@ export function clamp(v: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, v));
 }
 
-export const today = { date: "۱۴۰۵/۰۸/۲۹", label: "جمعه ۲۹ آبان ۱۴۰۵" };
+export const today = { date: "۱۴۰۴/۱۲/۲۹", label: "پایان سال مالی ۱۴۰۴ — ۲۹ اسفند" };
